@@ -1,0 +1,16 @@
+<!-- @dsCard group="Containment" height=480 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>BottomSheet preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{maxWidth:420}}, h(E.BottomSheet,{eyebrow:'Type',eyebrowTone:'positive',title:'Type you spotted'},
+  h(E.TextField,{id:'b1',label:'What did it say?',defaultValue:'Night Garden'}),
+  h('div',{className:'title-small'},'Closest face'),
+  h(E.ButtonGroup,{label:'Closest face',fit:true,tone:'container',defaultValue:'serif',options:[{value:'serif',label:'Fraunces'},{value:'sans',label:'Google Sans Flex'},{value:'mono',label:'Code'}]}),
+  h(E.Button,{size:'md',fullWidth:true,tone:'ink'},'Post'))));
+</script>
+</body>
+</html>

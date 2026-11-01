@@ -1,0 +1,14 @@
+<!-- @dsCard group="Status" height=96 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Badge preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.Badge,{mono:true,dot:true,tone:'highlight'},'Pending'), h(E.Badge,{mono:true,dot:true,tone:'positive'},'Filled'), h(E.Badge,{mono:true,dot:true},'Palette'), h(E.Badge,{tone:'error',mono:true},'Needs you')),
+  h('div',{className:'ex-row'}, h(E.Badge,{tone:'tertiary'},'Best'), h(E.Badge,{tone:'primary'},'+30%'), h(E.Badge,{tone:'positive'},'1 free night'), h(E.Badge,null,'Category 7'), h(E.Badge,{count:4}))));
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!-- @dsCard group="Navigation" height=96 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>NavigationBar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{maxWidth:420}}, h(E.NavigationBar,{defaultValue:0,items:[{icon:'show_chart',label:'Home'},{icon:'explore',label:'Explore'},{icon:'receipt_long',label:'Activity',badge:2},{icon:'account_circle',label:'Account'}]})));
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!-- @dsCard group="Containment" height=320 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Card preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.Card,{variant:'primary',title:'Daily mix',display:true,body:'Nothing\u2019s due, but a shuffled review keeps it all fresh.'}, h(E.Button,{fullWidth:true,size:'md'},'Start review')),
+  h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}, h(E.Card,{variant:'tertiary',padding:'sm',title:'Note Rush',body:'Name as many notes as you can in 60 seconds.',onClick:function(){}}), h(E.Card,{variant:'secondary',padding:'sm',title:'Ear gym',body:'Intervals and chords by ear alone.',onClick:function(){}}))));
+</script>
+</body>
+</html>

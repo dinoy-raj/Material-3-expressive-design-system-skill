@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TopBar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{maxWidth:420}},
+  h(E.TopBar,{leading:'back',actions:[{icon:'star',label:'Watch'}],eyebrow:'Review · Market order',title:'Buy $100.00 of ACRN',subtitle:'Acorn Semiconductor',display:true}),
+  h(E.TopBar,{size:'small',leading:'close',title:'Review and book',actions:[{icon:'more_vert',label:'More'}]})));
+</script>
+</body>
+</html>

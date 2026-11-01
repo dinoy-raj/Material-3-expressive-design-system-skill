@@ -1,0 +1,122 @@
+<!doctype html>
+<!-- Expressive Kit, generated from tokens/tokens.json by scripts/build.py. Do not edit by hand. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expressive Kit gallery</title>
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../components/expressive.css">
+<style>
+  .g-wrap { max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-4); }
+  .g-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+  .g-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: var(--space-4); margin-top: var(--space-6); align-items: start; }
+  .g-card { background: var(--surface-container-lowest); border-radius: var(--shape-xl); overflow: hidden; min-width: 0; }
+  .g-card > header { display: flex; align-items: baseline; justify-content: space-between; padding: var(--space-4) var(--space-5) 0; }
+  .g-card > header h2 { margin: 0; }
+  .g-card > header .eyebrow { color: var(--on-surface-variant); }
+  .g-card > div { padding: var(--space-2) 0 var(--space-3); }
+</style>
+</head>
+<body>
+<div class="g-wrap">
+  <div class="g-top">
+    <div><div class="eyebrow" style="color:var(--on-surface-variant)">Material 3 Expressive</div><h1 class="display-small" style="margin:0">Expressive Kit</h1></div>
+    <div id="theme"></div>
+  </div>
+  <div class="g-grid">
+<section class="g-card"><header><h2 class="title-large">Badge</h2><span class="eyebrow">Status</span></header><div id="c-Badge"></div></section>
+<section class="g-card"><header><h2 class="title-large">BottomSheet</h2><span class="eyebrow">Containment</span></header><div id="c-BottomSheet"></div></section>
+<section class="g-card"><header><h2 class="title-large">Button</h2><span class="eyebrow">Actions</span></header><div id="c-Button"></div></section>
+<section class="g-card"><header><h2 class="title-large">ButtonGroup</h2><span class="eyebrow">Actions</span></header><div id="c-ButtonGroup"></div></section>
+<section class="g-card"><header><h2 class="title-large">Card</h2><span class="eyebrow">Containment</span></header><div id="c-Card"></div></section>
+<section class="g-card"><header><h2 class="title-large">Chip</h2><span class="eyebrow">Selection</span></header><div id="c-Chip"></div></section>
+<section class="g-card"><header><h2 class="title-large">Fab</h2><span class="eyebrow">Actions</span></header><div id="c-Fab"></div></section>
+<section class="g-card"><header><h2 class="title-large">GroupedList</h2><span class="eyebrow">Containment</span></header><div id="c-GroupedList"></div></section>
+<section class="g-card"><header><h2 class="title-large">IconButton</h2><span class="eyebrow">Actions</span></header><div id="c-IconButton"></div></section>
+<section class="g-card"><header><h2 class="title-large">ListItem</h2><span class="eyebrow">Containment</span></header><div id="c-ListItem"></div></section>
+<section class="g-card"><header><h2 class="title-large">NavigationBar</h2><span class="eyebrow">Navigation</span></header><div id="c-NavigationBar"></div></section>
+<section class="g-card"><header><h2 class="title-large">SearchBar</h2><span class="eyebrow">Inputs</span></header><div id="c-SearchBar"></div></section>
+<section class="g-card"><header><h2 class="title-large">ShapeAvatar</h2><span class="eyebrow">Identity</span></header><div id="c-ShapeAvatar"></div></section>
+<section class="g-card"><header><h2 class="title-large">Slider</h2><span class="eyebrow">Selection</span></header><div id="c-Slider"></div></section>
+<section class="g-card"><header><h2 class="title-large">Snackbar</h2><span class="eyebrow">Status</span></header><div id="c-Snackbar"></div></section>
+<section class="g-card"><header><h2 class="title-large">StatTile</h2><span class="eyebrow">Containment</span></header><div id="c-StatTile"></div></section>
+<section class="g-card"><header><h2 class="title-large">SummaryList</h2><span class="eyebrow">Containment</span></header><div id="c-SummaryList"></div></section>
+<section class="g-card"><header><h2 class="title-large">Switch</h2><span class="eyebrow">Selection</span></header><div id="c-Switch"></div></section>
+<section class="g-card"><header><h2 class="title-large">TextField</h2><span class="eyebrow">Inputs</span></header><div id="c-TextField"></div></section>
+<section class="g-card"><header><h2 class="title-large">TopBar</h2><span class="eyebrow">Navigation</span></header><div id="c-TopBar"></div></section>
+<section class="g-card"><header><h2 class="title-large">ValuePill</h2><span class="eyebrow">Status</span></header><div id="c-ValuePill"></div></section>
+<section class="g-card"><header><h2 class="title-large">WavyProgress</h2><span class="eyebrow">Status</span></header><div id="c-WavyProgress"></div></section>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="../components/expressive.js"></script>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('theme')).render(h(E.ButtonGroup, { label: 'Theme', fit: true, defaultValue: 'system',
+    options: [{ value: 'system', label: 'System' }, { value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }],
+    onChange: function (v) { if (v === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = v; } }));
+  ReactDOM.createRoot(document.getElementById('c-Badge')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.Badge,{mono:true,dot:true,tone:'highlight'},'Pending'), h(E.Badge,{mono:true,dot:true,tone:'positive'},'Filled'), h(E.Badge,{mono:true,dot:true},'Palette'), h(E.Badge,{tone:'error',mono:true},'Needs you')),
+  h('div',{className:'ex-row'}, h(E.Badge,{tone:'tertiary'},'Best'), h(E.Badge,{tone:'primary'},'+30%'), h(E.Badge,{tone:'positive'},'1 free night'), h(E.Badge,null,'Category 7'), h(E.Badge,{count:4}))));
+  ReactDOM.createRoot(document.getElementById('c-BottomSheet')).render(h('div',{style:{maxWidth:420}}, h(E.BottomSheet,{eyebrow:'Type',eyebrowTone:'positive',title:'Type you spotted'},
+  h(E.TextField,{id:'b1',label:'What did it say?',defaultValue:'Night Garden'}),
+  h('div',{className:'title-small'},'Closest face'),
+  h(E.ButtonGroup,{label:'Closest face',fit:true,tone:'container',defaultValue:'serif',options:[{value:'serif',label:'Fraunces'},{value:'sans',label:'Google Sans Flex'},{value:'mono',label:'Code'}]}),
+  h(E.Button,{size:'md',fullWidth:true,tone:'ink'},'Post'))));
+  ReactDOM.createRoot(document.getElementById('c-Button')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.Button,null,'Start review'), h(E.Button,{variant:'tonal',icon:'volume_up'},'Hear it'), h(E.Button,{variant:'outlined'},'Sell'), h(E.Button,{variant:'text'},'Apply'), h(E.Button,{variant:'elevated',icon:'add'},'Add connection')),
+  h('div',{className:'ex-row'}, h(E.Button,{tone:'error',variant:'tonal',icon:'delete'},'Cancel this trip'), h(E.Button,{tone:'ink'},'Message Hue'), h(E.Button,{disabled:true},'Look it up')),
+  h('div',{style:{maxWidth:420}}, h(E.Button,{size:'md',fullWidth:true},'Place order · $23.33'))));
+  ReactDOM.createRoot(document.getElementById('c-ButtonGroup')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.ButtonGroup,{label:'Order type',defaultValue:'d',options:[{value:'d',label:'Dollars'},{value:'s',label:'Shares'}]}),
+  h(E.ButtonGroup,{label:'Ride style',tone:'secondary',defaultValue:'b',options:[{value:'c',label:'Calm',icon:'spa'},{value:'b',label:'Balanced',icon:'balance'},{value:'s',label:'Swift',icon:'bolt'}]}),
+  h(E.ButtonGroup,{label:'Size',defaultValue:'4',tone:'container',options:[{value:'1',label:'Single',sub:'$4.50'},{value:'4',label:'Box of 4',sub:'$16.00'},{value:'6',label:'Box of 6',sub:'$23.00'}]}),
+  h(E.ButtonGroup,{label:'Tip',defaultValue:'10',options:[{value:'0',label:'None'},{value:'10',label:'10%'},{value:'15',label:'15%'},{value:'20',label:'20%'}]})));
+  ReactDOM.createRoot(document.getElementById('c-Card')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.Card,{variant:'primary',title:'Daily mix',display:true,body:'Nothing\u2019s due, but a shuffled review keeps it all fresh.'}, h(E.Button,{fullWidth:true,size:'md'},'Start review')),
+  h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}, h(E.Card,{variant:'tertiary',padding:'sm',title:'Note Rush',body:'Name as many notes as you can in 60 seconds.',onClick:function(){}}), h(E.Card,{variant:'secondary',padding:'sm',title:'Ear gym',body:'Intervals and chords by ear alone.',onClick:function(){}}))));
+  ReactDOM.createRoot(document.getElementById('c-Chip')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.Chip,{label:'Want to read',count:1}), h(E.Chip,{label:'Reading',count:1,defaultSelected:true,icon:'auto_stories'}), h(E.Chip,{label:'Read',count:1}), h(E.Chip,{label:'Glass of oat milk +$2.50',defaultSelected:true})),
+  h('div',{className:'ex-row'}, h(E.Chip,{label:'All',variant:'tonal',defaultSelected:true}), h(E.Chip,{label:'Photos',variant:'tonal'}), h(E.Chip,{label:'Colour',variant:'tonal'}), h(E.Chip,{label:'Type',variant:'tonal'}), h(E.Chip,{label:'Words',variant:'tonal'}))));
+  ReactDOM.createRoot(document.getElementById('c-Fab')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'16px',alignItems:'center'}},
+  h(E.Fab,{icon:'add',ariaLabel:'Add book'}), h(E.Fab,{icon:'add',label:'Add flights'}), h(E.Fab,{icon:'add',label:'New collection',tone:'secondary'}), h(E.Fab,{icon:'photo_camera',label:'Shoot',tone:'highlight',size:'lg'}))));
+  ReactDOM.createRoot(document.getElementById('c-GroupedList')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.GroupedList,{title:'Appearance'},
+    h('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}}, h('div',{className:'title-medium'},'Theme'), h(E.ButtonGroup,{label:'Theme',tone:'secondary',defaultValue:'sys',options:[{value:'sys',label:'System'},{value:'l',label:'Light'},{value:'d',label:'Dark'}]})),
+    h(E.Switch,{label:'Colours from your wallpaper',supportingText:'Book pages still take on their cover\u2019s colours'}),
+    h(E.Switch,{label:'Sights on map',defaultChecked:true}))));
+  ReactDOM.createRoot(document.getElementById('c-IconButton')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row'},
+  h(E.IconButton,{icon:'arrow_back',label:'Back'}), h(E.IconButton,{icon:'star',label:'Add to watchlist',selected:true}), h(E.IconButton,{icon:'favorite',label:'Favourite',variant:'tonal',selected:true}),
+  h(E.IconButton,{icon:'edit',label:'Edit',variant:'filled'}), h(E.IconButton,{icon:'share',label:'Share',variant:'outlined'}), h(E.IconButton,{icon:'more_vert',label:'More'}), h(E.IconButton,{icon:'swap_vert',label:'Swap',variant:'tonal',size:'sm'}))));
+  ReactDOM.createRoot(document.getElementById('c-ListItem')).render(h('div',{style:{maxWidth:440}},
+  h('div',{className:'eyebrow',style:{color:'var(--on-surface-variant)',padding:'12px 16px 4px'}},'Today'),
+  h(E.ListItem,{leading:h(E.ShapeAvatar,{shape:'cookie9',text:'A',tone:'highlight'}),headline:'Bought ACRN',supporting:'0.256631 shares at $389.66',meta:'Market · 10:50 PM',trailing:'$100.00'}),
+  h(E.ListItem,{leading:h(E.ShapeAvatar,{shape:'clover4',text:'G',tone:'positive'}),headline:'GRVE',supporting:'Greenwood Total Market ETF',trailing:h(E.ValuePill,{direction:'up',solid:true},'$287.60')}),
+  h(E.ListItem,{leading:h(E.ShapeAvatar,{shape:'flower8',text:'L',tone:'tertiary-container'}),headline:'LUTE',supporting:'Lute Audio',trailing:h(E.ValuePill,{direction:'down',solid:true},'$241.15'),onClick:function(){}})));
+  ReactDOM.createRoot(document.getElementById('c-NavigationBar')).render(h('div',{style:{maxWidth:420}}, h(E.NavigationBar,{defaultValue:0,items:[{icon:'show_chart',label:'Home'},{icon:'explore',label:'Explore'},{icon:'receipt_long',label:'Activity',badge:2},{icon:'account_circle',label:'Account'}]})));
+  ReactDOM.createRoot(document.getElementById('c-SearchBar')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.SearchBar,{id:'s1',placeholder:'Search stocks, funds and crypto'}), h(E.SearchBar,{id:'s2',placeholder:'Search titles, authors, ISBNs',defaultValue:'Dune'})));
+  ReactDOM.createRoot(document.getElementById('c-ShapeAvatar')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'14px'}},
+  ['cookie9','cookie6','clover4','flower5','flower8','sunny','burst','pebble','cookie4','cookie12'].map(function(s,i){ var tones=['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container','primary-container','tertiary-container','highlight']; return h(E.ShapeAvatar,{key:s,shape:s,size:52,tone:tones[i],text:s.charAt(0).toUpperCase(),label:s}); }),
+  h(E.ShapeAvatar,{shape:'flower8',size:88,tone:'primary',icon:'music_note',spin:true,label:'Trill'}))));
+  ReactDOM.createRoot(document.getElementById('c-Slider')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.Slider,{id:'r1',label:'Backup reserve',defaultValue:30,format:function(v){return v+'%';},supportingText:'Held back for outages. More is safer; less leaves more sunshine for your evenings.'})));
+  ReactDOM.createRoot(document.getElementById('c-Snackbar')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.Snackbar,{message:'Saved to Favourites',action:'Undo'}), h(E.Snackbar,{message:'Order placed. Crumb & Co. is warming the oven.',action:'Track'})));
+  ReactDOM.createRoot(document.getElementById('c-StatTile')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h('div',{className:'ex-stats'}, h(E.StatTile,{value:'56',label:'Treats',tone:'primary'}), h(E.StatTile,{value:'15',label:'Orders'}), h(E.StatTile,{value:'$452',label:'Spent',tone:'positive'})), h('div',{className:'ex-stats'}, h(E.StatTile,{value:'100',label:'total XP',display:true}), h(E.StatTile,{value:'1',label:'day streak',display:true}), h(E.StatTile,{value:'1/31',label:'lessons',display:true}))));
+  ReactDOM.createRoot(document.getElementById('c-SummaryList')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.SummaryList,{rows:[{label:'Treats',value:'$18.50'},{label:'Delivery',value:'Free',tone:'positive'},{label:'Service',value:'$0.99'},{label:'Tip',value:'$1.85'},{label:'Total',value:'$21.34',total:true}],footnote:'Market orders fill right away at the market price, which can move a little from this estimate.'})));
+  ReactDOM.createRoot(document.getElementById('c-Switch')).render(h('div',{className:'ex-stage',style:{maxWidth:420}}, h(E.Switch,{label:'I drink caffeine',supportingText:'We\u2019ll tell you when it helps and when to stop.',defaultChecked:true}), h(E.Switch,{label:'Include melatonin',supportingText:'Optional. Check with a clinician first.'}), h('div',{className:'ex-row'},h(E.Switch,{label:null,defaultChecked:true}),h(E.Switch,{}))));
+  ReactDOM.createRoot(document.getElementById('c-TextField')).render(h('div',{className:'ex-stage',style:{maxWidth:420,gap:'20px',paddingTop:'24px'}},
+  h(E.TextField,{id:'f1',label:'Title',defaultValue:'Piranesi'}),
+  h(E.TextField,{id:'f2',label:'Author(s)',defaultValue:'Susanna Clarke',supportingText:'Separate several with commas'}),
+  h(E.TextField,{id:'f3',label:'ISBN',defaultValue:'97816355756',error:'ISBNs have 13 digits, or 10 for older books',inputMode:'numeric'}),
+  h(E.TextField,{id:'f4',label:'Note (optional)',variant:'filled',placeholder:'Where? Any notes?'})));
+  ReactDOM.createRoot(document.getElementById('c-TopBar')).render(h('div',{style:{maxWidth:420}},
+  h(E.TopBar,{leading:'back',actions:[{icon:'star',label:'Watch'}],eyebrow:'Review · Market order',title:'Buy $100.00 of ACRN',subtitle:'Acorn Semiconductor',display:true}),
+  h(E.TopBar,{size:'small',leading:'close',title:'Review and book',actions:[{icon:'more_vert',label:'More'}]})));
+  ReactDOM.createRoot(document.getElementById('c-ValuePill')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.ValuePill,{direction:'up',solid:true},'$288.08'), h(E.ValuePill,{direction:'down',solid:true},'$389.16'), h(E.ValuePill,{direction:'up'},'4.38%'), h(E.ValuePill,{direction:'down'},'0.28%')),
+  h('div',{className:'ex-row'}, h(E.ValuePill,{direction:'up',inline:true},'$1,090.75 (3.84%)'), h('span',{className:'body-medium',style:{color:'var(--on-surface-variant)'}},'Past month'), h(E.ValuePill,{direction:'down',inline:true},'$15.76 (0.28%)'))));
+  ReactDOM.createRoot(document.getElementById('c-WavyProgress')).render(h('div',{className:'ex-stage',style:{maxWidth:440,gap:'20px'}}, h(E.WavyProgress,{value:0.55,label:'Add $16.50 more for free delivery'}), h(E.WavyProgress,{value:0.2,animated:true,label:'Lesson 1 of 5'}), h(E.WavyProgress,{value:0.8,flat:true,label:'Storage'})));
+</script>
+</body>
+</html>

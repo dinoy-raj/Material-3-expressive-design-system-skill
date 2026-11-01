@@ -1,0 +1,16 @@
+<!-- @dsCard group="Actions" height=250 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ButtonGroup preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.ButtonGroup,{label:'Order type',defaultValue:'d',options:[{value:'d',label:'Dollars'},{value:'s',label:'Shares'}]}),
+  h(E.ButtonGroup,{label:'Ride style',tone:'secondary',defaultValue:'b',options:[{value:'c',label:'Calm',icon:'spa'},{value:'b',label:'Balanced',icon:'balance'},{value:'s',label:'Swift',icon:'bolt'}]}),
+  h(E.ButtonGroup,{label:'Size',defaultValue:'4',tone:'container',options:[{value:'1',label:'Single',sub:'$4.50'},{value:'4',label:'Box of 4',sub:'$16.00'},{value:'6',label:'Box of 6',sub:'$23.00'}]}),
+  h(E.ButtonGroup,{label:'Tip',defaultValue:'10',options:[{value:'0',label:'None'},{value:'10',label:'10%'},{value:'15',label:'15%'},{value:'20',label:'20%'}]})));
+</script>
+</body>
+</html>

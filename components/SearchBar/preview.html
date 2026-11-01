@@ -1,0 +1,12 @@
+<!-- @dsCard group="Inputs" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SearchBar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.SearchBar,{id:'s1',placeholder:'Search stocks, funds and crypto'}), h(E.SearchBar,{id:'s2',placeholder:'Search titles, authors, ISBNs',defaultValue:'Dune'})));
+</script>
+</body>
+</html>

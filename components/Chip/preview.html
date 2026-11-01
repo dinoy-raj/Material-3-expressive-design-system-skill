@@ -1,0 +1,14 @@
+<!-- @dsCard group="Selection" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Chip preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.Chip,{label:'Want to read',count:1}), h(E.Chip,{label:'Reading',count:1,defaultSelected:true,icon:'auto_stories'}), h(E.Chip,{label:'Read',count:1}), h(E.Chip,{label:'Glass of oat milk +$2.50',defaultSelected:true})),
+  h('div',{className:'ex-row'}, h(E.Chip,{label:'All',variant:'tonal',defaultSelected:true}), h(E.Chip,{label:'Photos',variant:'tonal'}), h(E.Chip,{label:'Colour',variant:'tonal'}), h(E.Chip,{label:'Type',variant:'tonal'}), h(E.Chip,{label:'Words',variant:'tonal'}))));
+</script>
+</body>
+</html>

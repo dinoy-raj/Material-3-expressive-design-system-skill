@@ -1,0 +1,12 @@
+<!-- @dsCard group="Selection" height=190 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Switch preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:420}}, h(E.Switch,{label:'I drink caffeine',supportingText:'We\u2019ll tell you when it helps and when to stop.',defaultChecked:true}), h(E.Switch,{label:'Include melatonin',supportingText:'Optional. Check with a clinician first.'}), h('div',{className:'ex-row'},h(E.Switch,{label:null,defaultChecked:true}),h(E.Switch,{}))));
+</script>
+</body>
+</html>

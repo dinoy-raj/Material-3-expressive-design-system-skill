@@ -1,0 +1,14 @@
+<!-- @dsCard group="Status" height=96 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ValuePill preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'},
+  h('div',{className:'ex-row'}, h(E.ValuePill,{direction:'up',solid:true},'$288.08'), h(E.ValuePill,{direction:'down',solid:true},'$389.16'), h(E.ValuePill,{direction:'up'},'4.38%'), h(E.ValuePill,{direction:'down'},'0.28%')),
+  h('div',{className:'ex-row'}, h(E.ValuePill,{direction:'up',inline:true},'$1,090.75 (3.84%)'), h('span',{className:'body-medium',style:{color:'var(--on-surface-variant)'}},'Past month'), h(E.ValuePill,{direction:'down',inline:true},'$15.76 (0.28%)'))));
+</script>
+</body>
+</html>

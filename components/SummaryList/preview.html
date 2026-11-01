@@ -1,0 +1,12 @@
+<!-- @dsCard group="Containment" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SummaryList preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.SummaryList,{rows:[{label:'Treats',value:'$18.50'},{label:'Delivery',value:'Free',tone:'positive'},{label:'Service',value:'$0.99'},{label:'Tip',value:'$1.85'},{label:'Total',value:'$21.34',total:true}],footnote:'Market orders fill right away at the market price, which can move a little from this estimate.'})));
+</script>
+</body>
+</html>

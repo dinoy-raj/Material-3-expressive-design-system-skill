@@ -1,0 +1,14 @@
+<!-- @dsCard group="Identity" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ShapeAvatar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'14px'}},
+  ['cookie9','cookie6','clover4','flower5','flower8','sunny','burst','pebble','cookie4','cookie12'].map(function(s,i){ var tones=['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container','primary-container','tertiary-container','highlight']; return h(E.ShapeAvatar,{key:s,shape:s,size:52,tone:tones[i],text:s.charAt(0).toUpperCase(),label:s}); }),
+  h(E.ShapeAvatar,{shape:'flower8',size:88,tone:'primary',icon:'music_note',spin:true,label:'Trill'}))));
+</script>
+</body>
+</html>
