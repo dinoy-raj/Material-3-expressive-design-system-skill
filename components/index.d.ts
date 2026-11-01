@@ -74,4 +74,15 @@ export declare function SummaryList(props: SummaryListProps): React.ReactElement
 export interface SnackbarProps { message: string; action?: string; onAction?: () => void }
 export declare function Snackbar(props: SnackbarProps): React.ReactElement;
 
-declare global { interface Window { Expressive: { Button: typeof Button; IconButton: typeof IconButton; Fab: typeof Fab; ButtonGroup: typeof ButtonGroup; Chip: typeof Chip; Badge: typeof Badge; ValuePill: typeof ValuePill; NavigationBar: typeof NavigationBar; TopBar: typeof TopBar; SearchBar: typeof SearchBar; TextField: typeof TextField; Switch: typeof Switch; Slider: typeof Slider; WavyProgress: typeof WavyProgress; Card: typeof Card; ListItem: typeof ListItem; GroupedList: typeof GroupedList; StatTile: typeof StatTile; ShapeAvatar: typeof ShapeAvatar; BottomSheet: typeof BottomSheet; SummaryList: typeof SummaryList; Snackbar: typeof Snackbar } } }
+export interface LoadingIndicatorProps { size?: number; contained?: boolean; label?: string }
+export declare function LoadingIndicator(props: LoadingIndicatorProps): React.ReactElement;
+
+export interface SplitButtonItem { label: string; icon?: IconName; onClick?: () => void }
+export interface SplitButtonProps { children: React.ReactNode; icon?: IconName; variant?: 'filled' | 'tonal' | 'outlined'; size?: 'sm' | 'md'; items?: SplitButtonItem[]; menuLabel?: string; defaultOpen?: boolean; onClick?: () => void }
+export declare function SplitButton(props: SplitButtonProps): React.ReactElement;
+
+export interface ToolbarItem { icon: IconName; label: string; toggle?: boolean; onClick?: () => void }
+export interface FloatingToolbarProps { items: ToolbarItem[]; value?: number; defaultValue?: number; vibrant?: boolean; label?: string; fab?: FabProps }
+export declare function FloatingToolbar(props: FloatingToolbarProps): React.ReactElement;
+
+declare global { interface Window { Expressive: { Button: typeof Button; IconButton: typeof IconButton; Fab: typeof Fab; ButtonGroup: typeof ButtonGroup; Chip: typeof Chip; Badge: typeof Badge; ValuePill: typeof ValuePill; NavigationBar: typeof NavigationBar; TopBar: typeof TopBar; SearchBar: typeof SearchBar; TextField: typeof TextField; Switch: typeof Switch; Slider: typeof Slider; WavyProgress: typeof WavyProgress; Card: typeof Card; ListItem: typeof ListItem; GroupedList: typeof GroupedList; StatTile: typeof StatTile; ShapeAvatar: typeof ShapeAvatar; BottomSheet: typeof BottomSheet; SummaryList: typeof SummaryList; Snackbar: typeof Snackbar; LoadingIndicator: typeof LoadingIndicator; SplitButton: typeof SplitButton; FloatingToolbar: typeof FloatingToolbar } } }

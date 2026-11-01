@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"Expressive","components":[{"name":"Button"},{"name":"IconButton"},{"name":"Fab"},{"name":"ButtonGroup"},{"name":"Chip"},{"name":"Badge"},{"name":"ValuePill"},{"name":"NavigationBar"},{"name":"TopBar"},{"name":"SearchBar"},{"name":"TextField"},{"name":"Switch"},{"name":"Slider"},{"name":"WavyProgress"},{"name":"Card"},{"name":"ListItem"},{"name":"GroupedList"},{"name":"StatTile"},{"name":"ShapeAvatar"},{"name":"BottomSheet"},{"name":"SummaryList"},{"name":"Snackbar"}]} */
+/* @ds-bundle: {"format":4,"namespace":"Expressive","components":[{"name":"Button"},{"name":"IconButton"},{"name":"Fab"},{"name":"ButtonGroup"},{"name":"Chip"},{"name":"Badge"},{"name":"ValuePill"},{"name":"NavigationBar"},{"name":"TopBar"},{"name":"SearchBar"},{"name":"TextField"},{"name":"Switch"},{"name":"Slider"},{"name":"WavyProgress"},{"name":"Card"},{"name":"ListItem"},{"name":"GroupedList"},{"name":"StatTile"},{"name":"ShapeAvatar"},{"name":"BottomSheet"},{"name":"SummaryList"},{"name":"Snackbar"},{"name":"LoadingIndicator"},{"name":"SplitButton"},{"name":"FloatingToolbar"}]} */
 (function () {
   var React = window.React;
   var h = React.createElement;
@@ -217,6 +217,62 @@
     return h('div', { className: 'ex-snack', role: 'status' }, h('span', { className: 'msg' }, p.message), p.action ? h('button', { type: 'button', className: 'ex-press', onClick: p.onAction }, p.action) : null);
   }
 
-  var api = { Button: Button, IconButton: IconButton, Fab: Fab, ButtonGroup: ButtonGroup, Chip: Chip, Badge: Badge, ValuePill: ValuePill, NavigationBar: NavigationBar, TopBar: TopBar, SearchBar: SearchBar, TextField: TextField, Switch: Switch, Slider: Slider, WavyProgress: WavyProgress, Card: Card, ListItem: ListItem, GroupedList: GroupedList, StatTile: StatTile, ShapeAvatar: ShapeAvatar, BottomSheet: BottomSheet, SummaryList: SummaryList, Snackbar: Snackbar };
+  /* Loading indicator: a shape that morphs through the shape library while it rotates. */
+  var LOADING_SEQ = ['cookie9', 'pebble', 'sunny', 'burst', 'flower5', 'cookie4', 'clover4'];
+  function morphPath(a, b, k) {
+    var fa = SHAPES[a], fb = SHAPES[b], N = 120, pts = [], max = 0, d = '';
+    for (var i = 0; i < N; i++) { var t = i / N * 2 * Math.PI, r = fa(t) * (1 - k) + fb(t) * k; max = Math.max(max, r); pts.push([t, r]); }
+    for (var j = 0; j < N; j++) { var p = pts[j], rr = p[1] / max; d += (j ? 'L' : 'M') + (rr * Math.cos(p[0])).toFixed(4) + ' ' + (rr * Math.sin(p[0])).toFixed(4); }
+    return d + 'Z';
+  }
+  function LoadingIndicator(p) {
+    var size = p.size || 48;
+    var ref = React.useRef(null);
+    React.useEffect(function () {
+      var el = ref.current, raf, start = null;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!el) return undefined;
+      if (reduce) { el.setAttribute('d', shapePath('cookie9')); return undefined; }
+      function frame(ts) {
+        if (start === null) start = ts;
+        var t = (ts - start) / 650, i = Math.floor(t) % LOADING_SEQ.length, f = t - Math.floor(t);
+        var k = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
+        el.setAttribute('d', morphPath(LOADING_SEQ[i], LOADING_SEQ[(i + 1) % LOADING_SEQ.length], k));
+        el.setAttribute('transform', 'rotate(' + ((ts - start) / 4.2 % 360).toFixed(1) + ') scale(' + (0.92 + 0.08 * Math.sin(f * Math.PI)).toFixed(3) + ')');
+        raf = requestAnimationFrame(frame);
+      }
+      raf = requestAnimationFrame(frame);
+      return function () { cancelAnimationFrame(raf); };
+    }, []);
+    return h('span', { className: cx('ex-loading', p.contained && 'is-contained'), style: { width: size, height: size }, role: 'progressbar', 'aria-label': p.label || 'Loading' },
+      h('svg', { viewBox: '-1.35 -1.35 2.7 2.7', 'aria-hidden': 'true' }, h('path', { ref: ref, d: shapePath('cookie9') })));
+  }
+
+  /* Split button: a main action and a menu trigger that rounds fully and spins its chevron when open. */
+  function SplitButton(p) {
+    var st = useState(!!p.defaultOpen), open = st[0];
+    var variant = p.variant || 'filled';
+    return h('div', { className: cx('ex-split', 'v-' + variant, open && 'is-open', p.size === 'md' && 'size-md') },
+      h('button', { type: 'button', className: 'ex-press ex-split-main', onClick: p.onClick }, Icon(p.icon), p.children),
+      h('button', { type: 'button', className: 'ex-press ex-split-trail', 'aria-label': p.menuLabel || 'More options', 'aria-expanded': open, 'aria-haspopup': 'menu', onClick: function () { st[1](!open); } }, Icon('keyboard_arrow_down')),
+      open && p.items ? h('div', { className: 'ex-menu', role: 'menu' }, p.items.map(function (it) {
+        return h('button', { key: it.label, type: 'button', role: 'menuitem', className: 'ex-press ex-menu-item', onClick: function () { st[1](false); if (it.onClick) it.onClick(); } }, Icon(it.icon), it.label);
+      })) : null);
+  }
+
+  /* Floating toolbar: a pill of contextual actions that floats over content, optionally beside a FAB. */
+  function FloatingToolbar(p) {
+    var st = useState(p.defaultValue != null ? p.defaultValue : -1);
+    var sel = p.value != null ? p.value : st[0];
+    return h('div', { className: 'ex-ftb-wrap' },
+      h('div', { className: cx('ex-ftb', p.vibrant && 'is-vibrant'), role: 'toolbar', 'aria-label': p.label || 'Actions' },
+        p.items.map(function (it, i) {
+          var on = i === sel;
+          return h('button', { key: it.icon, type: 'button', className: cx('ex-press ex-ftb-btn', on && 'is-selected'), 'aria-label': it.label, 'aria-pressed': it.toggle ? on : undefined, onClick: function () { if (it.toggle) { if (p.value == null) st[1](on ? -1 : i); } if (it.onClick) it.onClick(); } }, Icon(it.icon, on));
+        })),
+      p.fab ? h(Fab, Object.assign({ tone: p.vibrant ? 'primary' : 'secondary' }, p.fab)) : null);
+  }
+
+  var api = { LoadingIndicator: LoadingIndicator, SplitButton: SplitButton, FloatingToolbar: FloatingToolbar, Button: Button, IconButton: IconButton, Fab: Fab, ButtonGroup: ButtonGroup, Chip: Chip, Badge: Badge, ValuePill: ValuePill, NavigationBar: NavigationBar, TopBar: TopBar, SearchBar: SearchBar, TextField: TextField, Switch: Switch, Slider: Slider, WavyProgress: WavyProgress, Card: Card, ListItem: ListItem, GroupedList: GroupedList, StatTile: StatTile, ShapeAvatar: ShapeAvatar, BottomSheet: BottomSheet, SummaryList: SummaryList, Snackbar: Snackbar };
   window.Expressive = Object.assign(window.Expressive || {}, api);
 })();
