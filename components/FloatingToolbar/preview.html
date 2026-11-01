@@ -1,0 +1,12 @@
+<!-- @dsCard group="Navigation" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FloatingToolbar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'}, h(E.FloatingToolbar,{defaultValue:1,items:[{icon:'crop',label:'Crop',toggle:true},{icon:'tune',label:'Adjust',toggle:true},{icon:'filter_vintage',label:'Filters',toggle:true},{icon:'text_fields',label:'Text',toggle:true}],fab:{icon:'check',ariaLabel:'Done'}}), h(E.FloatingToolbar,{vibrant:true,defaultValue:0,items:[{icon:'layers',label:'Layers',toggle:true},{icon:'my_location',label:'My location'},{icon:'local_cafe',label:'Pit stops',toggle:true},{icon:'park',label:'Sights',toggle:true}]})));
+</script>
+</body>
+</html>

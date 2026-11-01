@@ -254,7 +254,7 @@ def build_gallery():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Expressive Kit gallery</title>
 <link rel="stylesheet" href="../tokens/tokens.css">
-<link rel="stylesheet" href="../components/expressive.css">
+<link rel="stylesheet" href="../components/bundle.css">
 <style>
   .g-wrap {{ max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-4); }}
   .g-top {{ display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }}
@@ -278,7 +278,7 @@ def build_gallery():
 </div>
 <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-<script src="../components/expressive.js"></script>
+<script src="../components/bundle.js"></script>
 <script>
   var E = window.Expressive, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('theme')).render(h(E.ButtonGroup, {{ label: 'Theme', fit: true, defaultValue: 'system',

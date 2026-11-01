@@ -1,0 +1,12 @@
+<!-- @dsCard group="Status" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>LoadingIndicator preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'28px',alignItems:'center'}}, h(E.LoadingIndicator,{size:40}), h(E.LoadingIndicator,{size:56}), h(E.LoadingIndicator,{size:56,contained:true}), h(E.LoadingIndicator,{size:80,contained:true,label:'Loading routes'}))));
+</script>
+</body>
+</html>
