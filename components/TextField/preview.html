@@ -1,0 +1,16 @@
+<!-- @dsCard group="Inputs" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TextField preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:420,gap:'20px',paddingTop:'24px'}},
+  h(E.TextField,{id:'f1',label:'Title',defaultValue:'Piranesi'}),
+  h(E.TextField,{id:'f2',label:'Author(s)',defaultValue:'Susanna Clarke',supportingText:'Separate several with commas'}),
+  h(E.TextField,{id:'f3',label:'ISBN',defaultValue:'97816355756',error:'ISBNs have 13 digits, or 10 for older books',inputMode:'numeric'}),
+  h(E.TextField,{id:'f4',label:'Note (optional)',variant:'filled',placeholder:'Where? Any notes?'})));
+</script>
+</body>
+</html>

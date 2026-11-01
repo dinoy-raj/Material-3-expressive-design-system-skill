@@ -1,0 +1,19 @@
+{
+  "name": "expressive-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Material 3 Expressive design system: tokens, React components, Compose theme and guidelines.",
+  "main": "components/expressive.js",
+  "types": "components/index.d.ts",
+  "style": "components/expressive.css",
+  "exports": {
+    ".": "./components/expressive.js",
+    "./tokens": "./tokens/tokens.mjs",
+    "./tokens.json": "./tokens/tokens.json",
+    "./tokens.css": "./tokens/tokens.css",
+    "./styles.css": "./components/expressive.css"
+  },
+  "files": ["tokens", "components", "android", "docs"],
+  "peerDependencies": { "react": "^18.3.1", "react-dom": "^18.3.1" },
+  "scripts": { "build": "python3 scripts/build.py" }
+}

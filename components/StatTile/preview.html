@@ -1,0 +1,12 @@
+<!-- @dsCard group="Containment" height=130 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StatTile preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h('div',{className:'ex-stats'}, h(E.StatTile,{value:'56',label:'Treats',tone:'primary'}), h(E.StatTile,{value:'15',label:'Orders'}), h(E.StatTile,{value:'$452',label:'Spent',tone:'positive'})), h('div',{className:'ex-stats'}, h(E.StatTile,{value:'100',label:'total XP',display:true}), h(E.StatTile,{value:'1',label:'day streak',display:true}), h(E.StatTile,{value:'1/31',label:'lessons',display:true}))));
+</script>
+</body>
+</html>

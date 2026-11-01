@@ -1,0 +1,14 @@
+<!-- @dsCard group="Actions" height=88 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>IconButton preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row'},
+  h(E.IconButton,{icon:'arrow_back',label:'Back'}), h(E.IconButton,{icon:'star',label:'Add to watchlist',selected:true}), h(E.IconButton,{icon:'favorite',label:'Favourite',variant:'tonal',selected:true}),
+  h(E.IconButton,{icon:'edit',label:'Edit',variant:'filled'}), h(E.IconButton,{icon:'share',label:'Share',variant:'outlined'}), h(E.IconButton,{icon:'more_vert',label:'More'}), h(E.IconButton,{icon:'swap_vert',label:'Swap',variant:'tonal',size:'sm'}))));
+</script>
+</body>
+</html>

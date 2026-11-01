@@ -1,0 +1,16 @@
+<!-- @dsCard group="Containment" height=330 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>GroupedList preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}},
+  h(E.GroupedList,{title:'Appearance'},
+    h('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}}, h('div',{className:'title-medium'},'Theme'), h(E.ButtonGroup,{label:'Theme',tone:'secondary',defaultValue:'sys',options:[{value:'sys',label:'System'},{value:'l',label:'Light'},{value:'d',label:'Dark'}]})),
+    h(E.Switch,{label:'Colours from your wallpaper',supportingText:'Book pages still take on their cover\u2019s colours'}),
+    h(E.Switch,{label:'Sights on map',defaultChecked:true}))));
+</script>
+</body>
+</html>

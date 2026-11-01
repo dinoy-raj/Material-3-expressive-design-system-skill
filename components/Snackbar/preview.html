@@ -1,0 +1,12 @@
+<!-- @dsCard group="Status" height=110 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Snackbar preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.Snackbar,{message:'Saved to Favourites',action:'Undo'}), h(E.Snackbar,{message:'Order placed. Crumb & Co. is warming the oven.',action:'Track'})));
+</script>
+</body>
+</html>
