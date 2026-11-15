@@ -12,7 +12,7 @@
 - **A Jetpack Compose theme** generated from the same tokens (`MaterialExpressiveTheme`, expressive motion scheme, emphasized type, dynamic colour, true black), plus motion helpers and extra components.
 - **An AI skill** ([`SKILL.md`](SKILL.md)) that teaches Claude or any AI tool M3 Expressive shape, motion, emphasis, component patterns and screen patterns.
 - **Guidelines:** a [brand book](docs/brand-book.md), [motion recipes](docs/motion.md), [ten screen patterns](docs/screen-patterns.md) and [ten seed palettes](docs/seed-palettes.md).
-- **A website** with live components, deployed to GitHub Pages on every merge to `main`.
+- **A website** with live components at [dinoyraj.com/Material-3-expressive-design-system-skill](https://dinoyraj.com/Material-3-expressive-design-system-skill), redeployed on every merge to `main`.
 
 ## Contents
 
@@ -195,14 +195,16 @@ Pass component names to re-shoot only those, for example `node scripts/screensho
 Build and preview the website locally:
 
 ```bash
-pip install markdown && python3 scripts/build_site.py && python3 -m http.server 8000 --directory _site
+pip install markdown && SITE_BASE=/ python3 scripts/build_site.py && npx serve _site
 ```
 
-Then open http://localhost:8000. Check each `on-*` colour pair still meets 4.5:1 in both themes before committing, and commit source and generated files together. The deploy workflow fails if generated files are out of date.
+Then open http://localhost:3000. `SITE_BASE=/` builds the site for the root; the deployed build uses `/Material-3-expressive-design-system-skill/`. Page links have no `.html`, so use a server that resolves them, like `serve`. Check each `on-*` colour pair still meets 4.5:1 in both themes before committing, and commit source and generated files together. The deploy workflow fails if generated files are out of date.
 
 ### Website deployment
 
 `.github/workflows/pages.yml` builds the website and the downloadable skill on every push to `main`, then deploys to GitHub Pages. One-time setup: in the repository's Settings → Pages, set **Source** to **GitHub Actions**.
+
+The same build is served at [dinoyraj.com/Material-3-expressive-design-system-skill](https://dinoyraj.com/Material-3-expressive-design-system-skill): `vercel.json` in the [portfolio-website](https://github.com/dinoy-raj/portfolio-website) repository rewrites that path to the GitHub Pages site, so each Pages deploy shows up there with no extra step. Both hosts share the path prefix, which is why every link the site builder writes is root-absolute under it. Pages are styled after dinoyraj.com (`scripts/site.css`).
 
 ## Credits
 
