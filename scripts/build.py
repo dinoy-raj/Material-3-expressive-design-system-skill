@@ -37,6 +37,46 @@ def css_name(n):
     return n.replace(".", "\\.")
 
 
+# ---------- springs ----------
+def spring_curve(damping, stiffness, tolerance=0.001):
+    """Step response of a unit-mass spring from 0 to 1.
+
+    Returns (duration_ms, css_linear_easing). Duration is the time after which the curve stays
+    within `tolerance` of its target; the easing samples the real curve so CSS can follow it.
+    """
+    import math
+    w = math.sqrt(stiffness)
+
+    def x(t):
+        if damping < 1:
+            wd = w * math.sqrt(1 - damping ** 2)
+            return 1 - math.exp(-damping * w * t) * (math.cos(wd * t) + damping * w / wd * math.sin(wd * t))
+        return 1 - math.exp(-w * t) * (1 + w * t)
+
+    dt, t, settle = 0.001, 0.0, 0.0
+    while t < 3:
+        if abs(1 - x(t)) > tolerance:
+            settle = t
+        t += dt
+    settle = max(0.05, settle)
+    n = 40
+    pts = [0.0] + [round(x(settle * i / n), 4) for i in range(1, n)] + [1.0]
+    pts = ["0" if v == 0 else "1" if v == 1 else f"{v:g}" for v in pts]
+    return round(settle * 1000 / 10) * 10, "linear(" + ", ".join(pts) + ")"
+
+
+def motion_tokens():
+    out = {}
+    for scheme in TOKENS.get("motion", {}).get("schemes", []):
+        out[scheme["id"]] = {}
+        for tk in scheme["tokens"]:
+            ms, easing = spring_curve(tk["dampingRatio"], tk["stiffness"])
+            out[scheme["id"]][tk["name"]] = {"dampingRatio": tk["dampingRatio"], "stiffness": tk["stiffness"],
+                                              "duration": f"{ms}ms", "easing": easing,
+                                              "fallbackEasing": TOKENS["motion"]["fallback"][tk["name"]]}
+    return out
+
+
 # ---------- tokens.css ----------
 def build_css():
     light, dark = THEMES[0], THEMES[1]
@@ -63,6 +103,32 @@ def build_css():
                + "\n".join("  " + l for l in theme_block(dark).splitlines()) + "\n  }\n}")
     out.append(f'[data-theme="{dark}"] {{\n  color-scheme: dark;\n{theme_block(dark)}\n}}')
     out.append(":root {\n" + "\n".join(static) + "\n}")
+
+    motion = motion_tokens()
+    if motion:
+        def motion_block(scheme, key):
+            lines = []
+            for name, m in motion[scheme].items():
+                easing = m[key]
+                lines.append(f"  --motion-{name}-duration: {m['duration']};")
+                lines.append(f"  --motion-{name}-easing: {easing};")
+                lines.append(f"  --motion-{name}: {m['duration']} {easing};")
+            return "\n".join(lines)
+        stagger = "\n".join(f"  --{t['name']}: {t['value']};" for t in TOKENS["motion"].get("stagger", []))
+        out.append("/* Motion: springs from tokens.json. Fallback curves first, then the real spring sampled as linear(). */\n"
+                   ":root {\n" + motion_block("expressive", "fallbackEasing") + "\n" + stagger + "\n}")
+        out.append('[data-motion="standard"] {\n' + motion_block("standard", "fallbackEasing").replace("cubic-bezier(0.34, 1.56, 0.64, 1)", "cubic-bezier(0.2, 0, 0, 1)")
+                   .replace("cubic-bezier(0.34, 1.4, 0.64, 1)", "cubic-bezier(0.2, 0, 0, 1)").replace("cubic-bezier(0.34, 1.3, 0.64, 1)", "cubic-bezier(0.2, 0, 0, 1)") + "\n}")
+        out.append("@supports (transition-timing-function: linear(0, 1)) {\n  :root {\n"
+                   + "\n".join("  " + l for l in motion_block("expressive", "easing").splitlines())
+                   + '\n  }\n  [data-motion="standard"] {\n'
+                   + "\n".join("  " + l for l in motion_block("standard", "easing").splitlines()) + "\n  }\n}")
+        reduced = []
+        for name in motion["expressive"]:
+            if name.startswith("spatial"):
+                reduced += [f"    --motion-{name}-duration: 0ms;", f"    --motion-{name}: 0ms linear;"]
+        out.append("/* Reduced motion: movement becomes instant; colour and opacity changes stay. */\n"
+                   "@media (prefers-reduced-motion: reduce) {\n  :root, [data-motion] {\n" + "\n".join(reduced) + "\n  }\n}")
     for g in TOKENS["type"]["groups"]:
         for s in g["styles"]:
             fam = s.get("family", g["family"])
@@ -75,6 +141,8 @@ def build_css():
             if g["name"] == "Hero numerals":
                 decl.append("font-variant-numeric: tabular-nums")
             out.append(f".{s['name']} {{ " + "; ".join(decl) + "; }")
+            if "fontWeightEmphasized" in s:
+                out.append(f".{s['name']}-emphasized {{ " + "; ".join(decl[:3] + [f"font-weight: {s['fontWeightEmphasized']}"] + decl[4:]) + "; }")
     (ROOT / "tokens" / "tokens.css").write_text("\n\n".join(out) + "\n")
 
 
@@ -86,8 +154,10 @@ def build_js():
         "radius": {t["name"]: t["value"] for t in TOKENS["radius"]["tokens"]},
         "size": {t["name"]: t["value"] for t in TOKENS["size"]["tokens"]},
         "fonts": TOKENS["type"]["families"],
-        "type": {s["name"]: {k: v for k, v in s.items() if k in ("fontSize", "lineHeight", "fontWeight", "letterSpacing")} | {"family": s.get("family", g["family"])}
+        "type": {s["name"]: {k: v for k, v in s.items() if k in ("fontSize", "lineHeight", "fontWeight", "fontWeightEmphasized", "letterSpacing")} | {"family": s.get("family", g["family"])}
                  for g in TOKENS["type"]["groups"] for s in g["styles"]},
+        "motion": motion_tokens(),
+        "stagger": {t["name"]: t["value"] for t in TOKENS.get("motion", {}).get("stagger", [])},
     }
     (ROOT / "tokens" / "tokens.mjs").write_text(f"// {HEADER}\nexport const tokens = {json.dumps(data, indent=2)};\nexport default tokens;\n")
 
@@ -131,43 +201,69 @@ def build_android():
 
     radius = {t["name"]: t["value"] for t in TOKENS["radius"]["tokens"]}
     dp = lambda v: v.replace("px", "")
-    type_lines = []
+    type_lines, emph_lines, extra_type = [], [], []
     m3_type = {"display-large": "displayLarge", "display-medium": "displayMedium", "display-small": "displaySmall",
                "headline-large": "headlineLarge", "headline-medium": "headlineMedium", "headline-small": "headlineSmall",
                "title-large": "titleLarge", "title-medium": "titleMedium", "title-small": "titleSmall",
                "body-large": "bodyLarge", "body-medium": "bodyMedium", "body-small": "bodySmall",
                "label-large": "labelLarge", "label-medium": "labelMedium", "label-small": "labelSmall"}
     fam_kt = {"sans": "SansFamily", "display": "DisplayFamily", "mono": "MonoFamily"}
-    extra_type = []
     for g in TOKENS["type"]["groups"]:
         for s in g["styles"]:
-            fam = fam_kt[s.get("family", g["family"])]
+            fam = s.get("family", g["family"])
             ls = s.get("letterSpacing", "0px").replace("px", "")
-            style = (f"TextStyle(fontFamily = {fam}, fontSize = {dp(s['fontSize'])}.sp, lineHeight = {dp(s['lineHeight'])}.sp, "
-                     f"fontWeight = FontWeight({s['fontWeight']}), letterSpacing = ({ls}).sp)")
+            size = dp(s["fontSize"])
+
+            def style(weight, family_expr):
+                return (f"TextStyle(fontFamily = {family_expr}, fontSize = {size}.sp, lineHeight = {dp(s['lineHeight'])}.sp, "
+                        f"fontWeight = FontWeight({weight}), letterSpacing = ({ls}).sp)")
             if s["name"] in m3_type:
-                type_lines.append(f"    {m3_type[s['name']]} = {style},")
+                type_lines.append(f"    {m3_type[s['name']]} = {style(s['fontWeight'], f'{fam}({size}f)')},")
+                emph_lines.append(f"    {m3_type[s['name']]}Emphasized = {style(s['fontWeightEmphasized'], f'{fam}({size}f)')},")
             else:
-                extra_type.append(f"    val {camel(s['name'])} = {style}")
+                extra_type.append(f"    val {camel(s['name'])} = {style(s['fontWeight'], fam_kt[fam])}")
+    motion = motion_tokens()
+    motion_rows = "\n".join(
+        f" *   {name:<16} expressive {motion['expressive'][name]['dampingRatio']} / {motion['expressive'][name]['stiffness']:<5}"
+        f" standard {motion['standard'][name]['dampingRatio']} / {motion['standard'][name]['stiffness']:<5}"
+        f" -> MaterialTheme.motionScheme.{ {'fast': 'fast', 'default': 'default', 'slow': 'slow'}[name.split('-')[1]] }{name.split('-')[0].capitalize()}Spec()"
+        for name in motion["expressive"])
     kt = f"""// {HEADER}
-// Fonts: add Google Sans Flex, Fraunces and Google Sans Code with downloadable fonts
-// (androidx.compose.ui:ui-text-google-fonts) or as res/font files, then replace the families below.
+// Fonts: add Google Sans Flex, Fraunces and Google Sans Code as res/font files (or downloadable fonts),
+// then pass them to expressiveTypography(), e.g.
+//   expressiveTypography(sans = {{ size -> variableFontFamily(R.font.google_sans_flex, size) }})
+// Requires androidx.compose.material3 1.4 or later for MaterialExpressiveTheme and MotionScheme.
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package design.expressive.kit
 
+import android.os.Build
+import androidx.annotation.FontRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LocalTonalElevationEnabled
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -175,6 +271,34 @@ import androidx.compose.ui.unit.sp
 val SansFamily: FontFamily = FontFamily.SansSerif
 val DisplayFamily: FontFamily = FontFamily.Serif
 val MonoFamily: FontFamily = FontFamily.Monospace
+
+private val familyCache = HashMap<Pair<Int, Int>, FontFamily>()
+
+/**
+ * A variable font pinned to one optical size, with real cuts at each weight.
+ *
+ * M3 type tokens set the `opsz` axis equal to the font size, so small text gets the sturdier
+ * text cut and large text the tighter display cut from one font file. Pass the result to
+ * [expressiveTypography] per size.
+ */
+fun variableFontFamily(
+    @FontRes resId: Int,
+    opticalSize: Float,
+    weights: IntArray = intArrayOf(400, 500, 600, 700, 800),
+): FontFamily = familyCache.getOrPut(resId to opticalSize.toInt()) {{
+    FontFamily(
+        weights.map {{ w ->
+            Font(
+                resId = resId,
+                weight = FontWeight(w),
+                variationSettings = FontVariation.Settings(
+                    FontVariation.weight(w),
+                    FontVariation.Setting("opsz", opticalSize.coerceIn(6f, 144f)),
+                ),
+            )
+        }},
+    )
+}}
 
 {scheme(THEMES[0], 'ExpressiveLightColors')}
 
@@ -192,30 +316,94 @@ data class ExtendedColors(
 
 val LocalExtendedColors = staticCompositionLocalOf {{ ExpressiveLightExtended }}
 
+/**
+ * True-black variant of a dark scheme for OLED screens. The page goes black and the low
+ * containers darken, so cards on `surfaceContainer` and above separate more, not less.
+ */
+fun ColorScheme.toAmoledBlack(): ColorScheme = copy(
+    background = Color.Black,
+    surface = Color.Black,
+    surfaceDim = Color.Black,
+    surfaceContainerLowest = Color.Black,
+    surfaceContainerLow = lerp(surfaceContainerLow, Color.Black, 0.6f),
+    surfaceContainer = lerp(surfaceContainer, Color.Black, 0.35f),
+    scrim = Color.Black,
+)
+
 val ExpressiveShapes = Shapes(
     extraSmall = RoundedCornerShape({dp(radius['shape-xs'])}.dp),
     small = RoundedCornerShape({dp(radius['shape-sm'])}.dp),
     medium = RoundedCornerShape({dp(radius['shape-md'])}.dp),
     large = RoundedCornerShape({dp(radius['shape-lg'])}.dp),
+    largeIncreased = RoundedCornerShape({dp(radius['shape-lg-increased'])}.dp),
     extraLarge = RoundedCornerShape({dp(radius['shape-xl'])}.dp),
+    extraLargeIncreased = RoundedCornerShape({dp(radius['shape-xl-increased'])}.dp),
+    extraExtraLarge = RoundedCornerShape({dp(radius['shape-xxl'])}.dp),
 )
 
-val ExpressiveTypography = Typography(
-{chr(10).join(type_lines)}
-)
+/**
+ * The type scale with all fifteen emphasized twins. Each family lambda receives the style's
+ * font size so a variable font can pin its optical size to it (see [variableFontFamily]).
+ */
+fun expressiveTypography(
+    sans: (Float) -> FontFamily = {{ SansFamily }},
+    display: (Float) -> FontFamily = {{ DisplayFamily }},
+): Typography {{
+    return Typography(
+{chr(10).join('    ' + l for l in type_lines)}
+{chr(10).join('    ' + l for l in emph_lines)}
+    )
+}}
+
+val ExpressiveTypography = expressiveTypography()
 
 /** Styles beyond the Material type scale: hero numerals and mono data labels. */
 object ExpressiveTextStyles {{
 {chr(10).join(extra_type)}
 }}
 
+/**
+ * The Expressive Kit theme.
+ *
+ * Uses [MaterialExpressiveTheme], which installs the expressive motion scheme, shapes and
+ * emphasized type. Motion tokens map onto the scheme's springs (damping ratio / stiffness):
+{motion_rows}
+ * Read them from `MaterialTheme.motionScheme` rather than hard-coding springs.
+ *
+ * @param motionScheme [MotionScheme.expressive] for consumer and playful apps (overshoot), or
+ *   [MotionScheme.standard] for productivity and utility apps (no visible bounce).
+ * @param dynamicColor derive colours from the wallpaper on Android 12+. Off by default so the
+ *   brand palette shows; keep brand moments (hero cards, illustrations) on brand colours either way.
+ * @param amoledBlack in dark theme, use a true-black page for OLED screens.
+ */
 @Composable
-fun ExpressiveTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {{
-    CompositionLocalProvider(LocalExtendedColors provides if (darkTheme) ExpressiveDarkExtended else ExpressiveLightExtended) {{
-        MaterialTheme(
-            colorScheme = if (darkTheme) ExpressiveDarkColors else ExpressiveLightColors,
+fun ExpressiveTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    motionScheme: MotionScheme = MotionScheme.expressive(),
+    dynamicColor: Boolean = false,
+    amoledBlack: Boolean = false,
+    typography: Typography = ExpressiveTypography,
+    content: @Composable () -> Unit,
+) {{
+    val context = LocalContext.current
+    val base = when {{
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        darkTheme -> ExpressiveDarkColors
+        else -> ExpressiveLightColors
+    }}
+    val amoled = darkTheme && amoledBlack
+    val colorScheme = remember(base, amoled) {{ if (amoled) base.toAmoledBlack() else base }}
+    CompositionLocalProvider(
+        LocalExtendedColors provides if (darkTheme) ExpressiveDarkExtended else ExpressiveLightExtended,
+        // Tonal elevation would paint grey back over a true-black page.
+        LocalTonalElevationEnabled provides !amoled,
+    ) {{
+        MaterialExpressiveTheme(
+            colorScheme = colorScheme,
+            motionScheme = motionScheme,
             shapes = ExpressiveShapes,
-            typography = ExpressiveTypography,
+            typography = typography,
             content = content,
         )
     }}

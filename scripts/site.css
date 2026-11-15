@@ -93,3 +93,12 @@ a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-r
 .s-foot { background: var(--surface-container); margin-top: var(--space-12); }
 .s-foot .s-in { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); padding-block: var(--space-6); color: var(--on-surface-variant); font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Motion token demo */
+.motions { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+.mo { display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: var(--space-4); cursor: pointer; }
+.mo .meta { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--on-surface-variant); }
+.mo-track { position: relative; height: 40px; border-radius: var(--shape-full); background: var(--surface-container-high); }
+.mo-ball { position: absolute; top: 4px; left: 4px; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-container); }
+.mo:hover .mo-ball, .mo:active .mo-ball { left: calc(100% - 36px); background: var(--primary); }
+.s-doc :not(pre) > code { overflow-wrap: anywhere; }

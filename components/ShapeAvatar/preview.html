@@ -1,4 +1,4 @@
-<!-- @dsCard group="Identity" height=150 -->
+<!-- @dsCard group="Identity" height=260 -->
 <!doctype html>
 <html>
 <head><meta charset="utf-8"><title>ShapeAvatar preview</title></head>
@@ -6,9 +6,19 @@
 <div id="root"></div>
 <script>
   var E = window.Expressive, h = React.createElement;
-  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'14px'}},
-  ['cookie9','cookie6','clover4','flower5','flower8','sunny','burst','pebble','cookie4','cookie12'].map(function(s,i){ var tones=['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container','primary-container','tertiary-container','highlight']; return h(E.ShapeAvatar,{key:s,shape:s,size:52,tone:tones[i],text:s.charAt(0).toUpperCase(),label:s}); }),
-  h(E.ShapeAvatar,{shape:'flower8',size:88,tone:'primary',icon:'music_note',spin:true,label:'Trill'}))));
+  ReactDOM.createRoot(document.getElementById('root')).render(h(function ShapeDemo() {
+    var tones = ['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container'];
+    var seq = ['cookie9','flower8','heart','gem','clover4','sunny'];
+    var s = React.useState(0);
+    React.useEffect(function () { var id = setInterval(function () { s[1](function (x) { return (x + 1) % seq.length; }); }, 1600); return function () { clearInterval(id); }; }, []);
+    return h('div', { className: 'ex-stage' },
+      h('div', { className: 'ex-row', style: { gap: '10px' } }, E.ShapeAvatar.shapes.map(function (name, i) {
+        return h(E.ShapeAvatar, { key: name, shape: name, size: 40, tone: tones[i % tones.length], label: name });
+      })),
+      h('div', { className: 'ex-row', style: { gap: '16px', marginTop: '8px' } },
+        h(E.ShapeAvatar, { shape: seq[s[0]], size: 88, tone: 'primary', icon: 'favorite', label: 'Morphing shape' }),
+        h(E.ShapeAvatar, { shape: 'flower8', size: 88, tone: 'tertiary-container', icon: 'music_note', spin: true, label: 'Trill' })));
+  }));
 </script>
 </body>
 </html>

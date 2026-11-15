@@ -1,0 +1,12 @@
+<!-- @dsCard group="Status" height=240 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DigitRoll preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(function DigitRollDemo(){ var s=React.useState(1509), n=s[0]; React.useEffect(function(){ var id=setInterval(function(){ s[1](function(x){ return x>0?x-1:1509; }); },1000); return function(){ clearInterval(id); }; },[]); var mm=Math.floor(n/60), ss=n%60, p=function(v){return (v<10?'0':'')+v;}; return h('div',{className:'ex-stage',style:{gap:'20px'}}, h('div',null, h('div',{className:'eyebrow',style:{color:'var(--on-surface-variant)'}},'Focus timer'), h(E.DigitRoll,{value:p(mm)+':'+p(ss),label:mm+' minutes '+ss+' seconds left'})), h('div',{className:'ex-row',style:{gap:'32px',alignItems:'flex-end'}}, h(E.DigitRoll,{value:['00',p(mm),p(ss)],stacked:true,className:'numeral-medium',label:'Stacked readout'}), h('div',null, h('div',{className:'eyebrow',style:{color:'var(--on-surface-variant)'}},'Balance'), h(E.DigitRoll,{value:'$'+(2400+(1509-n)*3).toLocaleString('en-US'),className:'numeral-small'})))); }));
+</script>
+</body>
+</html>

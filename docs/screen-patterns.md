@@ -68,8 +68,23 @@ Seen in: Sherwood Portfolio, Trill Learn, Magpie Studio, Shelfie Library, Dollop
 3. One or two `TextField`s, a choice row (`ButtonGroup` or `Chip`s), then destination `Chip`s ("Post to").
 4. Full-width primary action at the bottom ("Post", "Create", "Add to library").
 
+## 9. Live readout (timer, stopwatch, countdown)
+
+1. The readout is the hero and nearly fills the width: `DigitRoll` in a numeral style, or `stacked` (one pair of digits per line) when it must be as large as possible. Tabular numerals, never a proportional face.
+2. A mono `eyebrow` above it naming what is counting (FOCUS · ROUND 2), and a progress ring or `WavyProgress` for time remaining when there is a known end.
+3. Controls below in a row: a large primary toggle (Start / Pause) between two secondary icon buttons (Reset, Lap). Starting and stopping pulse the readout once (`statePulse`) and fire `start` / `stop` haptics.
+4. Laps or history as list rows that slide in from the top on `spatial-default`; mark fastest and slowest with `positive` and `error` plus an icon.
+5. Setting a duration uses a `RotaryDial` or a keypad; a time of day uses `TimePickerDial` in a bottom sheet.
+
+## 10. List and detail (adaptive)
+
+1. Compact: the list is the screen; tapping a row pushes the detail with a `spatial-slow` slide and predictive back.
+2. Medium and up: `NavigationRail` on the leading edge, the list pane at up to 420px, the detail pane filling the rest with `space-6` gutters. Selecting a row cross-fades the detail on `effects-default`; the selected row turns `secondary-container`.
+3. Expanded (1200px+): the rail starts expanded, and a third pane (filters or related items) may appear on the trailing edge.
+4. Keep the selection when the window resizes; going from two panes to one shows the detail if something was selected.
+
 ## Unfolded and tablet
 
 - Hub and tab lists become list/detail: the list pane keeps phone layout at up to 420px; the detail pane fills the rest with `space-6` gutters.
-- The `NavigationBar` becomes a leading navigation rail with the same items and the `Fab` at its top.
+- The `NavigationBar` becomes a leading `NavigationRail` with the same items and the `Fab` at its top; from 1200px the rail starts expanded.
 - Charts and maps take the extra width; forms stay at a readable 560px maximum.

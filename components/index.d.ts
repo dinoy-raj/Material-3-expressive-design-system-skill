@@ -2,7 +2,7 @@ import type * as React from 'react';
 
 /** A Material Symbols Rounded ligature name, e.g. "arrow_back", "add", "photo_camera". */
 export type IconName = string;
-export type ShapeName = 'circle' | 'cookie4' | 'cookie6' | 'cookie9' | 'cookie12' | 'clover4' | 'flower5' | 'flower8' | 'sunny' | 'burst' | 'pebble';
+export type ShapeName = 'circle' | 'cookie4' | 'cookie6' | 'cookie7' | 'cookie9' | 'cookie12' | 'clover4' | 'clover8' | 'flower5' | 'flower8' | 'sunny' | 'softBurst' | 'burst' | 'boom' | 'pebble' | 'puffy' | 'square' | 'pill' | 'oval' | 'diamond' | 'triangle' | 'pentagon' | 'gem' | 'heart' | 'arch';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { variant?: 'filled' | 'tonal' | 'outlined' | 'text' | 'elevated'; size?: 'sm' | 'md' | 'lg'; tone?: 'error' | 'ink'; icon?: IconName; fullWidth?: boolean }
 export declare function Button(props: ButtonProps): React.ReactElement;
@@ -61,8 +61,8 @@ export declare function GroupedList(props: GroupedListProps): React.ReactElement
 export interface StatTileProps { value: React.ReactNode; label: React.ReactNode; tone?: 'primary' | 'primary-container' | 'positive' | 'tertiary'; display?: boolean }
 export declare function StatTile(props: StatTileProps): React.ReactElement;
 
-export interface ShapeAvatarProps { shape?: ShapeName; text?: string; icon?: IconName; tone?: 'primary' | 'primary-container' | 'secondary' | 'secondary-container' | 'tertiary-container' | 'highlight' | 'positive'; size?: number; label?: string; spin?: boolean; className?: string }
-export declare const ShapeAvatar: ((props: ShapeAvatarProps) => React.ReactElement) & { shapes: ShapeName[]; path: (name: ShapeName) => string };
+export interface ShapeAvatarProps { shape?: ShapeName; text?: string; icon?: IconName; tone?: 'primary' | 'primary-container' | 'secondary' | 'secondary-container' | 'tertiary-container' | 'highlight' | 'positive'; size?: number; label?: string; spin?: boolean; morph?: boolean; className?: string }
+export declare const ShapeAvatar: ((props: ShapeAvatarProps) => React.ReactElement) & { shapes: ShapeName[]; path: (name: ShapeName) => string; morph: (from: ShapeName, to: ShapeName, progress: number) => string };
 
 export interface BottomSheetProps { title?: string; subtitle?: string; eyebrow?: string; eyebrowTone?: BadgeProps['tone']; children?: React.ReactNode }
 export declare function BottomSheet(props: BottomSheetProps): React.ReactElement;
@@ -85,4 +85,31 @@ export interface ToolbarItem { icon: IconName; label: string; toggle?: boolean; 
 export interface FloatingToolbarProps { items: ToolbarItem[]; value?: number; defaultValue?: number; vibrant?: boolean; label?: string; fab?: FabProps }
 export declare function FloatingToolbar(props: FloatingToolbarProps): React.ReactElement;
 
-declare global { interface Window { Expressive: { Button: typeof Button; IconButton: typeof IconButton; Fab: typeof Fab; ButtonGroup: typeof ButtonGroup; Chip: typeof Chip; Badge: typeof Badge; ValuePill: typeof ValuePill; NavigationBar: typeof NavigationBar; TopBar: typeof TopBar; SearchBar: typeof SearchBar; TextField: typeof TextField; Switch: typeof Switch; Slider: typeof Slider; WavyProgress: typeof WavyProgress; Card: typeof Card; ListItem: typeof ListItem; GroupedList: typeof GroupedList; StatTile: typeof StatTile; ShapeAvatar: typeof ShapeAvatar; BottomSheet: typeof BottomSheet; SummaryList: typeof SummaryList; Snackbar: typeof Snackbar; LoadingIndicator: typeof LoadingIndicator; SplitButton: typeof SplitButton; FloatingToolbar: typeof FloatingToolbar } } }
+export interface DigitRollProps { value: string | number | string[]; stacked?: boolean; direction?: 'auto' | 'up' | 'down'; stagger?: number; blur?: boolean; label?: string; className?: string; style?: React.CSSProperties }
+export declare function DigitRoll(props: DigitRollProps): React.ReactElement;
+
+export interface TimeValue { hour: number; minute: number }
+export interface TimePickerDialProps { hour?: number; minute?: number; defaultHour?: number; defaultMinute?: number; onChange?: (time: TimeValue) => void; is24h?: boolean; defaultMode?: 'hour' | 'minute'; haptics?: boolean; label?: string }
+export declare function TimePickerDial(props: TimePickerDialProps): React.ReactElement;
+
+export interface RotaryDialProps { value?: number; defaultValue?: number; onChange?: (value: number) => void; min?: number; max?: number; step?: number; majorEvery?: number; stepRadians?: number; height?: number; label?: string; format?: (value: number) => React.ReactNode; haptics?: boolean }
+export declare function RotaryDial(props: RotaryDialProps): React.ReactElement;
+
+export interface NavigationRailProps { items: NavItem[]; value?: number; defaultValue?: number; onChange?: (index: number) => void; fab?: { icon: IconName; label: string; tone?: FabProps['tone']; onClick?: () => void }; expanded?: boolean; defaultExpanded?: boolean; onExpandedChange?: (expanded: boolean) => void; menu?: boolean; label?: string; className?: string }
+export declare function NavigationRail(props: NavigationRailProps): React.ReactElement;
+
+export type MotionToken = 'spatial-fast' | 'spatial-default' | 'spatial-slow' | 'effects-fast' | 'effects-default' | 'effects-slow';
+export type HapticKind = 'tick' | 'tap' | 'confirm' | 'reject' | 'longPress' | 'start' | 'stop';
+export interface Motion {
+  /** A damped spring from a motion token (follows `data-motion="standard"` on <html>) or explicit damping ratio and stiffness. */
+  spring(token: MotionToken): { at(seconds: number): number; duration: number };
+  spring(dampingRatio: number, stiffness: number, initialVelocity?: number): { at(seconds: number): number; duration: number };
+  /** Animate a number with a spring; returns a cancel function. Spatial tokens jump straight to `to` under reduced motion. */
+  animate(from: number, to: number, token: MotionToken, onFrame: (value: number) => void, onDone?: () => void, velocity?: number): () => void;
+  haptic(kind: HapticKind): void;
+  reducedMotion(): boolean;
+  springs: Record<'expressive' | 'standard', Record<MotionToken, [number, number]>>;
+}
+export declare const motion: Motion;
+
+declare global { interface Window { Expressive: { Button: typeof Button; IconButton: typeof IconButton; Fab: typeof Fab; ButtonGroup: typeof ButtonGroup; Chip: typeof Chip; Badge: typeof Badge; ValuePill: typeof ValuePill; NavigationBar: typeof NavigationBar; TopBar: typeof TopBar; SearchBar: typeof SearchBar; TextField: typeof TextField; Switch: typeof Switch; Slider: typeof Slider; WavyProgress: typeof WavyProgress; Card: typeof Card; ListItem: typeof ListItem; GroupedList: typeof GroupedList; StatTile: typeof StatTile; ShapeAvatar: typeof ShapeAvatar; BottomSheet: typeof BottomSheet; SummaryList: typeof SummaryList; Snackbar: typeof Snackbar; LoadingIndicator: typeof LoadingIndicator; SplitButton: typeof SplitButton; FloatingToolbar: typeof FloatingToolbar; DigitRoll: typeof DigitRoll; TimePickerDial: typeof TimePickerDial; RotaryDial: typeof RotaryDial; NavigationRail: typeof NavigationRail; motion: Motion } } }
