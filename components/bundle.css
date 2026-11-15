@@ -13,7 +13,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-icon.sm { font-size: 18px; }
 
 /* Shared interactive base: state layer + shape morph on press */
-.ex-press { position: relative; isolation: isolate; cursor: pointer; border: 0; font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; transition: border-radius 220ms cubic-bezier(0.2, 0, 0, 1), background-color 150ms linear, color 150ms linear; }
+.ex-press { position: relative; isolation: isolate; cursor: pointer; border: 0; font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; transition: border-radius var(--motion-spatial-fast), background-color var(--motion-effects-fast), color var(--motion-effects-fast); }
 .ex-press::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity 120ms linear; z-index: -1; pointer-events: none; }
 .ex-press:hover::before { opacity: var(--state-hover); }
 .ex-press:active::before { opacity: var(--state-pressed); }
@@ -110,7 +110,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-navbar { display: flex; height: var(--nav-bar); background: var(--surface-container); padding: 0 var(--space-2); box-sizing: border-box; }
 .ex-navbar > .ex-navitem { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); background: transparent; color: var(--on-surface-variant); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.5px; padding: 0; }
 .ex-navitem::before { display: none; }
-.ex-navitem .ex-navpill { position: relative; display: grid; place-items: center; width: var(--nav-indicator-w); height: 32px; border-radius: var(--shape-full); transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1), width 300ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+.ex-navitem .ex-navpill { position: relative; display: grid; place-items: center; width: var(--nav-indicator-w); height: 32px; border-radius: var(--shape-full); transition: background-color var(--motion-effects-default), width var(--motion-spatial-default); }
 .ex-navitem:hover .ex-navpill { background: color-mix(in srgb, var(--on-surface) 8%, transparent); }
 .ex-navitem.is-active { color: var(--on-surface); font-weight: 700; }
 .ex-navitem.is-active .ex-navpill { background: var(--primary-container); color: var(--on-primary-container); }
@@ -156,7 +156,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-switch-text .s { font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
 .ex-switch { position: relative; flex: none; width: 52px; height: 32px; border-radius: var(--shape-full); background: var(--surface-container-highest); box-shadow: inset 0 0 0 2px var(--outline); padding: 0; }
 .ex-switch::before { display: none; }
-.ex-switch .thumb { position: absolute; top: 50%; left: 16px; width: 16px; height: 16px; border-radius: 50%; background: var(--outline); transform: translate(-50%, -50%); display: grid; place-items: center; transition: left 300ms cubic-bezier(0.34, 1.4, 0.64, 1), width 200ms, height 200ms, background-color 150ms; }
+.ex-switch .thumb { position: absolute; top: 50%; left: 16px; width: 16px; height: 16px; border-radius: 50%; background: var(--outline); transform: translate(-50%, -50%); display: grid; place-items: center; transition: left var(--motion-spatial-fast), width var(--motion-spatial-fast), height var(--motion-spatial-fast), background-color var(--motion-effects-fast); }
 .ex-switch .thumb .ex-icon { font-size: 16px; opacity: 0; }
 .ex-switch:active .thumb { width: 28px; height: 28px; }
 .ex-switch.is-on { background: var(--primary); box-shadow: none; }
@@ -202,7 +202,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-card.v-highlight { background: var(--highlight); color: var(--on-highlight); }
 .ex-card .ex-card-title { margin: 0; }
 .ex-card .ex-card-body { margin: 0; opacity: 0.9; }
-.ex-card.is-pressable { cursor: pointer; transition: border-radius 220ms cubic-bezier(0.2, 0, 0, 1); }
+.ex-card.is-pressable { cursor: pointer; transition: border-radius var(--motion-spatial-fast); }
 .ex-card.is-pressable:active { border-radius: var(--shape-lg); }
 
 /* List item */
@@ -286,7 +286,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-split-main { padding: 0 var(--space-4) 0 var(--space-5); border-radius: var(--shape-full) var(--shape-xs) var(--shape-xs) var(--shape-full); }
 .ex-split-main .ex-icon { font-size: 20px; }
 .ex-split-trail { width: 44px; padding: 0; border-radius: var(--shape-xs) var(--shape-full) var(--shape-full) var(--shape-xs); }
-.ex-split-trail .ex-icon { transition: transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+.ex-split-trail .ex-icon { transition: transform var(--motion-spatial-fast); }
 .ex-split-main:active { border-radius: var(--shape-full) var(--shape-sm) var(--shape-sm) var(--shape-full); }
 .ex-split.is-open .ex-split-trail { border-radius: var(--shape-full); }
 .ex-split.is-open .ex-split-trail .ex-icon { transform: rotate(180deg); }
@@ -307,3 +307,105 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ex-ftb-btn.is-selected { background: var(--secondary-container); color: var(--on-secondary-container); border-radius: var(--shape-lg); }
 .ex-ftb.is-vibrant { background: var(--primary-container); color: var(--on-primary-container); }
 .ex-ftb.is-vibrant .ex-ftb-btn.is-selected { background: var(--primary); color: var(--on-primary); }
+
+/* Digit roll: one cell per character; the outgoing glyph leaves as the incoming one springs in.
+   Cells clip vertically with feathered edges so glyphs fade at the cell boundary rather than cut. */
+.ex-roll { display: inline-flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.ex-roll-line { display: inline-flex; }
+.ex-roll-cell { position: relative; display: inline-block; padding: 0.12em 0; margin: -0.12em 0; overflow: hidden; }
+.ex-roll-cell.is-rolling { -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); }
+.ex-roll-cell > span { display: block; }
+.ex-roll-cell .ex-roll-out { position: absolute; left: 0; right: 0; top: 0.12em; animation: ex-roll-out-up var(--motion-effects-default) both; }
+.ex-roll-cell .ex-roll-in { animation: ex-roll-in-up var(--motion-spatial-default) both, ex-roll-fade-in var(--motion-effects-fast) both; }
+.ex-roll-cell.dir-down .ex-roll-out { animation-name: ex-roll-out-down; }
+.ex-roll-cell.dir-down .ex-roll-in { animation-name: ex-roll-in-down, ex-roll-fade-in; }
+.ex-roll.is-stacked { line-height: 1; gap: 0.08em; }
+@keyframes ex-roll-in-up { from { transform: translateY(100%); filter: blur(3px); } to { transform: none; filter: none; } }
+@keyframes ex-roll-in-down { from { transform: translateY(-100%); filter: blur(3px); } to { transform: none; filter: none; } }
+@keyframes ex-roll-out-up { to { transform: translateY(-100%); opacity: 0; filter: blur(3px); } }
+@keyframes ex-roll-out-down { to { transform: translateY(100%); opacity: 0; filter: blur(3px); } }
+@keyframes ex-roll-fade-in { from { opacity: 0; } }
+.ex-roll.no-blur .ex-roll-cell > span { filter: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ex-roll-cell .ex-roll-in { animation: ex-roll-fade-in var(--motion-effects-fast) both; }
+  .ex-roll-cell .ex-roll-out { animation: none; display: none; }
+  .ex-roll-cell.is-rolling { -webkit-mask-image: none; mask-image: none; }
+}
+
+/* Time picker dial */
+.ex-tpd { display: flex; flex-direction: column; align-items: center; gap: var(--space-6); padding: var(--space-6); background: var(--surface-container-high); border-radius: var(--shape-xl); width: min(100%, 328px); box-sizing: border-box; }
+.ex-tpd-head { display: flex; align-items: stretch; gap: var(--space-3); }
+.ex-tpd-fields { display: flex; align-items: center; gap: var(--space-1); }
+.ex-tpd-field { width: 96px; height: 80px; border-radius: var(--shape-md); background: var(--surface-container-highest); color: var(--on-surface); font-size: 56px; line-height: 1; font-weight: 500; font-variant-numeric: tabular-nums; padding: 0; transition: border-radius var(--motion-spatial-fast), background-color var(--motion-effects-fast), color var(--motion-effects-fast); }
+.ex-tpd-field.is-active { background: var(--primary-container); color: var(--on-primary-container); border-radius: var(--shape-lg); }
+.ex-tpd-field:active { border-radius: var(--shape-xl); }
+.ex-tpd-colon { font-size: 56px; line-height: 1; color: var(--on-surface); width: 24px; text-align: center; }
+.ex-tpd-ampm { display: flex; flex-direction: column; gap: var(--space-0-5); width: 52px; }
+.ex-tpd-ampm > button { flex: 1; background: var(--surface-container-highest); color: var(--on-surface-variant); font-size: 14px; font-weight: 600; padding: 0; border-radius: var(--shape-xs); }
+.ex-tpd-ampm > button:first-child { border-radius: var(--shape-md) var(--shape-md) var(--shape-xs) var(--shape-xs); }
+.ex-tpd-ampm > button:last-child { border-radius: var(--shape-xs) var(--shape-xs) var(--shape-md) var(--shape-md); }
+.ex-tpd-ampm > button.is-selected { background: var(--tertiary-container); color: var(--on-tertiary-container); border-radius: var(--shape-md); }
+.ex-tpd-dial { width: 256px; max-width: 100%; aspect-ratio: 1; touch-action: none; cursor: pointer; border-radius: 50%; outline: none; user-select: none; -webkit-user-select: none; }
+.ex-tpd-dial:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+.ex-tpd-dial svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ex-tpd-dial .face { fill: var(--surface-container-highest); }
+.ex-tpd-dial .hand { transition: transform var(--motion-spatial-fast); }
+.ex-tpd-dial.is-dragging .hand { transition: none; }
+.ex-tpd-dial .arm { stroke: var(--primary); stroke-width: 2; }
+.ex-tpd-dial .knob, .ex-tpd-dial .hub { fill: var(--primary); }
+.ex-tpd-dial .dot { fill: var(--on-primary); }
+.ex-tpd-dial .lbl { fill: var(--on-surface); font-size: 16px; font-weight: 500; text-anchor: middle; dominant-baseline: central; font-variant-numeric: tabular-nums; pointer-events: none; transition: fill var(--motion-effects-fast); }
+.ex-tpd-dial .lbl.is-inner { font-size: 13px; fill: var(--on-surface-variant); }
+.ex-tpd-dial .lbl.is-sel { fill: var(--on-primary); }
+
+/* Rotary dial (drum) */
+.ex-rotary { display: flex; flex-direction: column; gap: var(--space-2); }
+.ex-rotary-drum { position: relative; border-radius: 18px; background: var(--surface-container-highest); overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; outline: none; }
+.ex-rotary-drum:active { cursor: grabbing; }
+.ex-rotary-drum:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.ex-rotary-drum svg { display: block; }
+.ex-rotary-drum .tick { fill: var(--on-surface-variant); }
+.ex-rotary-drum .tick.is-centre { fill: var(--primary); }
+.ex-rotary-notch { position: absolute; left: 50%; bottom: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); transform: translateX(-50%); }
+
+/* Navigation rail */
+.ex-rail { display: flex; flex-direction: column; gap: var(--space-8); width: 96px; min-height: 100%; padding: var(--space-5) var(--space-3); box-sizing: border-box; background: var(--surface); transition: width var(--motion-spatial-default), padding var(--motion-spatial-default); overflow: hidden; }
+.ex-rail.is-expanded { width: 240px; padding-left: var(--space-5); padding-right: var(--space-5); }
+.ex-rail-top { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); }
+.ex-rail.is-expanded .ex-rail-top { align-items: flex-start; }
+.ex-rail-fab { width: 56px; min-width: 56px; padding: 0; overflow: hidden; white-space: nowrap; justify-content: flex-start; padding-left: 16px; transition: width var(--motion-spatial-default), border-radius var(--motion-spatial-fast); }
+.ex-rail-fab .ex-rail-fab-label { opacity: 0; transition: opacity var(--motion-effects-fast); }
+.ex-rail.is-expanded .ex-rail-fab { width: auto; padding-right: var(--space-5); }
+.ex-rail.is-expanded .ex-rail-fab .ex-rail-fab-label { opacity: 1; }
+.ex-rail-items { display: flex; flex-direction: column; gap: var(--space-3); }
+.ex-railitem { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); background: transparent; color: var(--on-surface-variant); padding: 0; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.5px; }
+.ex-railitem::before { display: none; }
+.ex-railpill { position: relative; display: flex; align-items: center; justify-content: center; gap: var(--space-3); width: var(--nav-indicator-w); height: 32px; border-radius: var(--shape-full); box-sizing: border-box; transition: width var(--motion-spatial-default), height var(--motion-spatial-default), background-color var(--motion-effects-default); }
+.ex-railitem:hover .ex-railpill { background: color-mix(in srgb, var(--on-surface) 8%, transparent); }
+.ex-railitem.is-active { color: var(--on-surface); font-weight: 700; }
+.ex-railitem.is-active .ex-railpill { background: var(--primary-container); color: var(--on-primary-container); }
+.ex-raillabel-in { display: none; font-size: 14px; font-weight: 600; letter-spacing: 0.1px; white-space: nowrap; }
+.ex-railpill .ex-badge.is-count { position: absolute; top: 0; left: 32px; }
+.ex-rail.is-expanded .ex-railitem { align-items: stretch; }
+.ex-rail.is-expanded .ex-railpill { width: 100%; height: 56px; justify-content: flex-start; padding: 0 var(--space-4); }
+.ex-rail.is-expanded .ex-raillabel-in { display: inline; }
+.ex-rail.is-expanded .ex-raillabel { display: none; }
+.ex-rail.is-expanded .ex-railpill .ex-badge.is-count { position: static; margin-left: auto; }
+
+/* Motion utilities: one-shot micro-motions. Trigger by toggling the class (or changing a React key). */
+.ex-pulse { animation: ex-pulse var(--motion-spatial-default) both; }
+@keyframes ex-pulse { 0% { transform: scale(0.96); } 100% { transform: none; } }
+.ex-wiggle { animation: ex-wiggle 300ms linear both; transform-origin: 50% 20%; }
+@keyframes ex-wiggle { 20% { transform: rotate(-6deg); } 45% { transform: rotate(6deg); } 70% { transform: rotate(-3deg); } 100% { transform: none; } }
+.ex-flip { animation: ex-flip var(--motion-spatial-fast) both; }
+@keyframes ex-flip { from { transform: rotate(-180deg); } }
+.ex-spin-once { animation: ex-spin-once var(--motion-spatial-default) both; }
+@keyframes ex-spin-once { from { transform: rotate(-360deg); } }
+.ex-enter { animation: ex-enter var(--motion-spatial-default) both, ex-roll-fade-in var(--motion-effects-default) both; animation-delay: calc(min(var(--i, 0), 6) * var(--stagger-list)); }
+@keyframes ex-enter { from { transform: translateY(16px) scale(0.96); } }
+.ex-breathe { animation: ex-breathe 2400ms ease-in-out infinite alternate; }
+@keyframes ex-breathe { from { transform: scale(1); opacity: 1; } to { transform: scale(1.18); opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) {
+  .ex-pulse, .ex-wiggle, .ex-flip, .ex-spin-once, .ex-breathe { animation: none; }
+  .ex-enter { animation: ex-roll-fade-in var(--motion-effects-default) both; }
+}

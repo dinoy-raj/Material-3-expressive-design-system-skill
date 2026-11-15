@@ -1,0 +1,12 @@
+<!-- @dsCard group="Selection" height=520 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TimePickerDial preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.Expressive, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'ex-stage',style:{alignItems:'flex-start'}}, h(E.TimePickerDial,{defaultHour:7,defaultMinute:30,label:'Alarm time'})));
+</script>
+</body>
+</html>
