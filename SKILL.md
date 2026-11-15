@@ -1,6 +1,6 @@
 ---
 name: material-3-expressive
-description: Design and build Material 3 Expressive (M3E) apps and screens with the Expressive Kit design system. Use when asked to design, mock up, review or code UI in the Material 3 Expressive style for Android (Jetpack Compose), the web (React/HTML/CSS) or a design tool. Covers M3E tokens (colour roles, type scale, shape scale, spacing), the shape library and shape morphing, spring-based motion, component patterns (button groups, split buttons, FABs, floating toolbars, navigation bar and rail, wavy progress, loading indicator, sliders, cards, lists, sheets) and eight ready-made screen patterns.
+description: Design and build Material 3 Expressive (M3E) apps and screens with the Expressive Kit design system. Use when asked to design, mock up, review or code UI in the Material 3 Expressive style for Android (Jetpack Compose), the web (React/HTML/CSS) or a design tool. Covers M3E tokens (colour roles, type scale with emphasized styles, shape scale, spacing, spring motion tokens), the 25-shape library and shape morphing, motion recipes (digit roll, state pulse, list placement, swipe to delete, predictive back, icon micro-motion, haptics, reduced motion), component patterns (button groups, split buttons, FABs, floating toolbars, navigation bar and rail, time picker dial, rotary dial, wavy progress, loading indicator, sliders, cards, lists, sheets) and ten ready-made screen patterns.
 ---
 
 # Material 3 Expressive design skill
@@ -11,18 +11,20 @@ Read this file first. Go deeper only when you need to:
 
 | Need | Read |
 | --- | --- |
-| Exact token values (colours per theme, type, spacing, radii) | `tokens/tokens.json` (source) or `tokens/tokens.css` |
+| Exact token values (colours per theme, type, spacing, radii, motion) | `tokens/tokens.json` (source) or `tokens/tokens.css` |
+| Motion recipes, springs, haptics, reduced motion | `docs/motion.md` |
 | Brand rules: voice, colour, type, layout, motion, icons | `docs/brand-book.md` |
 | Full screen recipes | `docs/screen-patterns.md` |
 | A different product colour | `docs/seed-palettes.md` |
 | One component's props and do's and don'ts | `components/<Name>/README.md` and `components/index.d.ts` |
 | Android Compose theme | `android/ExpressiveTheme.kt` |
+| Compose motion helpers and extra components | `android/ExpressiveMotion.kt`, `android/ExpressiveComponents.kt` |
 
 ## How to work
 
-1. **Pick the platform.** Web: load `tokens/tokens.css` and `components/bundle.css`, then React 18 and `components/bundle.js` (`window.Expressive`). Android: use `ExpressiveTheme` from `android/ExpressiveTheme.kt` and the Material 3 Compose components, with the mapping table below. A design tool: name styles after the tokens.
+1. **Pick the platform.** Web: load `tokens/tokens.css` and `components/bundle.css`, then React 18 and `components/bundle.js` (`window.Expressive`). Android: wrap the app in `ExpressiveTheme` from `android/ExpressiveTheme.kt` (it uses `MaterialExpressiveTheme` with `MotionScheme.expressive()`, the emphasized type styles and optional dynamic colour and true black), then use the Material 3 Compose components with the mapping table below and the helpers in `android/ExpressiveMotion.kt`. A design tool: name styles after the tokens.
 2. **Pick a screen pattern** from the list below before laying anything out.
-3. **Use tokens, never raw values.** Colours come from roles (`primary`, `on-surface-variant`, `surface-container-high`), radii from the shape scale, spacing from `space-*`. If a value you need is missing, use the nearest token and say so.
+3. **Use tokens, never raw values.** Colours come from roles (`primary`, `on-surface-variant`, `surface-container-high`), radii from the shape scale, spacing from `space-*`, motion from `--motion-*` (web) or `MaterialTheme.motionScheme` (Compose). If a value you need is missing, use the nearest token and say so.
 4. **Apply the M3E behaviours** in this file: shape, motion, emphasis, containment.
 5. **Check before you finish** with the checklist at the end.
 
@@ -35,8 +37,8 @@ Read this file first. Go deeper only when you need to:
 - **Shape morph on press.** A pressed pill button tightens its corners (`shape-md` for small, `shape-lg` for medium, `shape-xl` for large) and springs back on release. Icon buttons and FABs do the same.
 - **Shape morph on selection.** A selected segment in a connected button group becomes a full pill while its neighbours keep small inner corners. Selected toggle buttons switch between round and square; selected toolbar items become squircles.
 - **Grouped shapes.** Items that belong together sit 2px apart (`space-0-5`) with large outer corners and small inner corners (`shape-sm` for buttons, `shape-xs` for list rows). This reads as one object with separately pressable parts.
-- **The shape library.** Beyond rectangles, M3E has about 35 abstract shapes. This kit ships 11 as `ShapeAvatar`: `cookie4`, `cookie6`, `cookie9`, `cookie12`, `clover4`, `flower5`, `flower8`, `sunny`, `burst`, `pebble`, `circle`. Use them for avatars, hero-icon seats, scores and ratings, image masks and decorative blobs. Give each kind of thing one shape and keep it (tickers are always cookie9).
-- **Shapes animate.** The loading indicator morphs between library shapes. Hero shapes may rotate slowly. Avatars may morph on selection.
+- **The shape library.** Beyond rectangles, M3E has about 35 abstract shapes. This kit ships 25 as `ShapeAvatar`: `circle`, `cookie4`, `cookie6`, `cookie7`, `cookie9`, `cookie12`, `clover4`, `clover8`, `flower5`, `flower8`, `sunny`, `softBurst`, `burst`, `boom`, `pebble`, `puffy`, `square`, `pill`, `oval`, `diamond`, `triangle`, `pentagon`, `gem`, `heart`, `arch` (Compose: `MaterialShapes.*`). Use them for avatars, hero-icon seats, scores and ratings, image masks and decorative blobs. Give each kind of thing one shape and keep it (tickers are always cookie9).
+- **Shapes animate.** Any two library shapes can morph into each other on `spatial-default`: change `ShapeAvatar`'s `shape` (web) or draw a `Morph` (Compose). The loading indicator cycles through shapes. Hero shapes may rotate slowly. Avatars morph on selection or completion (a pebble becomes a flower when a task is done).
 
 ### 2. Motion is physics-based
 
@@ -45,29 +47,35 @@ M3E replaces fixed durations and easing curves with **springs**. There are two k
 - **Spatial springs** move position, size, rotation and shape. They may overshoot (bounce).
 - **Effects springs** change colour and opacity. They never overshoot.
 
-Each kind comes in fast (small components), default (partial-screen) and slow (full-screen) speeds. The expressive scheme's values (Compose `MotionScheme.expressive()`):
+Each kind comes in fast (small components), default (partial-screen) and slow (full-screen) speeds. They are tokens: `--motion-spatial-fast` etc. in CSS (the real spring curve via `linear()`, with a cubic-bezier fallback), and `MaterialTheme.motionScheme.fastSpatialSpec()` etc. in Compose.
 
-| Token | Damping ratio | Stiffness | CSS approximation |
-| --- | --- | --- | --- |
-| spatial fast | 0.6 | 800 | `350ms cubic-bezier(0.34, 1.56, 0.64, 1)` |
-| spatial default | 0.8 | 380 | `500ms cubic-bezier(0.34, 1.4, 0.64, 1)` |
-| spatial slow | 0.8 | 200 | `650ms cubic-bezier(0.34, 1.3, 0.64, 1)` |
-| effects fast | 1.0 | 3800 | `150ms cubic-bezier(0.2, 0, 0, 1)` |
-| effects default | 1.0 | 1600 | `200ms cubic-bezier(0.2, 0, 0, 1)` |
-| effects slow | 1.0 | 800 | `300ms cubic-bezier(0.2, 0, 0, 1)` |
+| Token | Expressive (damping / stiffness) | Standard | Settles in | CSS variable |
+| --- | --- | --- | --- | --- |
+| spatial fast | 0.6 / 800 | 0.9 / 1400 | ~360ms | `--motion-spatial-fast` |
+| spatial default | 0.8 / 380 | 0.9 / 700 | ~430ms | `--motion-spatial-default` |
+| spatial slow | 0.8 / 200 | 0.9 / 300 | ~600ms | `--motion-spatial-slow` |
+| effects fast | 1.0 / 3800 | same | ~150ms | `--motion-effects-fast` |
+| effects default | 1.0 / 1600 | same | ~230ms | `--motion-effects-default` |
+| effects slow | 1.0 / 800 | same | ~330ms | `--motion-effects-slow` |
 
-The standard scheme (`MotionScheme.standard()`) uses damping 0.9 with no visible bounce. Use it for productivity and utility apps, and the expressive scheme for consumer and playful apps.
+The standard scheme has no visible bounce. Use it for productivity and utility apps (`data-motion="standard"` on `<html>`, or `ExpressiveTheme(motionScheme = MotionScheme.standard())`), and the expressive scheme for consumer and playful apps. For JS-driven motion, `Expressive.motion.animate(from, to, token, onFrame)` runs the real spring.
 
 Rules:
 - Interruptible: a new gesture retargets the spring from its current position and velocity; it never restarts.
 - Choreograph one moment per transition: the hero element moves with a spatial spring while content fades with an effects spring.
 - Celebrate outcomes once (stars pop in sequence, a shape spins behind a mascot), never on routine actions.
-- With `prefers-reduced-motion` (or Android's "Remove animations"), drop movement, bounce and rotation and keep simple fades.
+- Gestures hand their velocity to the settle spring: a flicked drum keeps turning a little, a released row slides on at the speed it was thrown.
+- Recipes in `docs/motion.md`: digit roll for changing numbers, state-change pulse, animated font weight for on/off state, icon micro-motion on tap (wiggle, flip, spin), spring list placement, swipe to reveal and delete with a one-time hint, selection mode, predictive back, shape morph, splash.
+- **Haptics** confirm motion: `tick` on each dial or drum step, `tap` for keypads, `confirm` / `reject` for outcomes, `longPress` to enter selection mode, `start` / `stop` for timers. Not on every tap.
+- **Ambient loops** (a breathing map marker, a ringing alarm's wiggle) only for something live, one per screen, slow and small.
+- With `prefers-reduced-motion` (or Android's "Remove animations", `rememberReducedMotion()`), drop movement, bounce, rotation and ambient loops and keep simple fades. The CSS motion tokens already turn spatial motion off.
 
 ### 3. Emphasis through type and colour
 
 - One hero per screen: a balance, a countdown, a score or a cover. Set it in `numeral-large` (56/60, weight 700, tabular numerals) or `display-small` (36/44, display face) with `space-12` of air.
-- The **emphasized** type styles are heavier weights of the base scale. This kit's headlines and titles are 600 to 700 and labels 600, so key text stands out at a glance.
+- The **emphasized** type styles are heavier twins of all fifteen Material styles with the same size and line height (`title-large-emphasized` classes on the web, `MaterialTheme.typography.titleLargeEmphasized` in Compose). Use one to mark the single most important thing without changing layout. This kit's base headlines and titles are already 600 to 700 and labels 600.
+- Set variable fonts' optical size to the font size (`opsz` = size; automatic on the web, `variableFontFamily(R.font.…, size)` in Compose) and keep the kit's letter-spacing, not Roboto's.
+- A number that changes is a `DigitRoll`, not a swapped string.
 - Pair a characterful display face (Fraunces by default) with Google Sans Flex for UI and Google Sans Code for data. Use one display face per screen at most.
 - Emphasise a single word in a display headline with italic `primary`: "Buy *$100.00* of ACRN".
 - Use an uppercase mono `eyebrow` above titles and list groups: `REVIEW · MARKET ORDER`, `TODAY`.
@@ -85,7 +93,9 @@ Rules:
 - `highlight` / `on-highlight`: one loud fill per screen (a large FAB, a streak). Never use it for text.
 - `positive` and `error`: gain/success and loss/error. Always pair with an arrow or icon so meaning doesn't depend on hue alone.
 - Every `on-*` pair meets 4.5:1 in both themes. The dark theme is a warm near-black with lighter accents and dark text on fills. Don't invert the light theme.
-- Dynamic colour: on Android 12+ you may derive the scheme from the wallpaper, but keep brand moments (hero cards, illustrations) on the brand palette.
+- Dynamic colour: on Android 12+ you may derive the scheme from the wallpaper (`ExpressiveTheme(dynamicColor = true)`), but keep brand moments (hero cards, illustrations) on the brand palette.
+- True black: offer `amoledBlack` in dark theme for OLED screens and apps used at night (clocks, readers). Only the page and lowest containers go black; tonal elevation is turned off so it stays black.
+- Go edge to edge on Android: transparent status and navigation bars (`enableEdgeToEdge()`), with content padded by the system insets.
 
 ### 6. Adaptive layout
 
@@ -96,7 +106,7 @@ Rules:
 | Expanded | 840–1199dp | Navigation rail (expanded on demand) | List (≤ 420dp) and detail |
 | Large / XL | ≥ 1200dp | Expanded navigation rail | Two or three panes, 24dp gutters |
 
-Foldables: avoid placing content across the hinge; on unfolded posture, switch to list and detail.
+Foldables: avoid placing content across the hinge; on unfolded posture, switch to list and detail. Keep the selected item and scroll position when the window class changes.
 
 ### 7. Content voice
 
@@ -115,13 +125,16 @@ Each entry gives the M3E behaviour, then this kit's component (web) and the Comp
 | FAB | One per screen, bottom-right above the nav bar; FAB, medium and large sizes; extended with a label; collapses on scroll. A FAB menu expands into a stack of related actions. | `Fab` | `FloatingActionButton`, `MediumFloatingActionButton`, `LargeFloatingActionButton`, `ExtendedFloatingActionButton`, `FloatingActionButtonMenu` |
 | Floating toolbar | A pill of contextual actions floating above content, optionally beside a FAB; replaces the bottom app bar; hides on scroll. | `FloatingToolbar` | `HorizontalFloatingToolbar` |
 | Navigation bar | 3–5 destinations; active item gets a pill indicator in `primary-container`, a filled icon and a bold label; labels always visible. | `NavigationBar` | `NavigationBar` / `ShortNavigationBar` |
-| Navigation rail | Medium and larger windows; collapsed or expanded; same items as the bar, FAB at the top. | — | `NavigationRail` / `WideNavigationRail` |
+| Navigation rail | Medium and larger windows; collapsed (96dp, label under icon) or expanded (240dp rows, FAB with label); same items as the bar, FAB at the top; width springs on `spatial-default`. | `NavigationRail` | `WideNavigationRail` / `NavigationRail` |
 | Top app bar | Large title block for top-level and detail screens; small bar with close for flows; optional subtitle. | `TopBar` | `LargeTopAppBar`, `MediumFlexibleTopAppBar`, `TopAppBar` |
 | Search | Full-width pill on `surface-container-high`; expands to a full-screen search view. | `SearchBar` | `SearchBar` |
 | Text fields | Outlined with the label in the border; filled inside sheets; errors say how to fix the problem. | `TextField` | `OutlinedTextField`, `TextField` |
 | Chips | Filters (outlined, check when selected), suggestions (tonal), input. Filter rows scroll sideways. | `Chip` | `FilterChip`, `AssistChip`, `SuggestionChip`, `InputChip` |
 | Switch | Applies immediately; thumb shows a check when on and grows while pressed. | `Switch` | `Switch` with a `thumbContent` icon |
 | Slider | Thick 16dp track split by a bar handle with gaps, stop dot at the end, value shown large. | `Slider` | `Slider` |
+| Rotary dial | A drum drawn in perspective with the slider's anatomy; drag or fling, snaps on `spatial-fast`, haptic tick per step. For values that feel like a physical control (timer length). | `RotaryDial` | `RotaryDial` (`android/ExpressiveComponents.kt`) |
+| Time picker | Large HH:MM fields (active one in `primary-container`) above a circular dial whose handle springs the short way round; hour then minute; AM/PM toggle or a two-ring 24-hour dial. | `TimePickerDial` | `TimePicker` / `TimeInput`; `TimeDial` for a custom face |
+| Changing numbers | Each digit rolls in its own cell; up when increasing, down when decreasing, staggered right to left; optional stacked lines for huge countdowns. | `DigitRoll` | `DigitRoll` (`android/ExpressiveMotion.kt`) |
 | Progress | Wavy linear and circular indicators for goals and good news; flat for neutral quotas. | `WavyProgress` | `LinearWavyProgressIndicator`, `CircularWavyProgressIndicator` |
 | Loading | Indeterminate waits under five seconds: a morphing, rotating shape, optionally contained. | `LoadingIndicator` | `LoadingIndicator`, `ContainedLoadingIndicator` |
 | Cards | `shape-xl`; default on `surface-container-low`; tonal containers for hero content; whole card pressable with corner morph. | `Card` | `Card`, `ElevatedCard`, `OutlinedCard` |
@@ -132,9 +145,9 @@ Each entry gives the M3E behaviour, then this kit's component (web) and the Comp
 | Receipt rows | Key/value rows, tabular numerals, total row last, "Free" in `positive`. | `SummaryList` | `Column` of `Row`s |
 | Badges and value pills | Mono uppercase status with a dot (PENDING); tonal tags (Best, +30%); counts on icons; gain/loss pills with arrows. | `Badge`, `ValuePill` | `Badge`, `BadgedBox`, custom `Surface` |
 | Snackbar | Past-tense confirmation on `inverse-surface`, one action, above the nav bar. | `Snackbar` | `Snackbar` |
-| Shapes | Library shapes for avatars, seats and masks. | `ShapeAvatar` (`ShapeAvatar.path(name)` gives SVG paths) | `MaterialShapes.Cookie9Sided`, `Clover4Leaf`, `Sunny`, `SoftBurst`, `Flower`, `Pill`… via `toShape()` |
+| Shapes | 25 library shapes for avatars, seats and masks; changing the shape morphs it. | `ShapeAvatar` (`ShapeAvatar.path(name)`, `ShapeAvatar.morph(a, b, k)`) | `MaterialShapes.Cookie9Sided`, `Clover4Leaf`, `Sunny`, `SoftBurst`, `Heart`, `Gem`, `Pill`… via `toShape()`; `Morph` to blend |
 
-Compose notes: the expressive components and `MaterialExpressiveTheme` / `MotionScheme.expressive()` ship in `androidx.compose.material3` 1.4+ and may need `@OptIn(ExperimentalMaterial3ExpressiveApi::class)`. Check the version in the project before using them, and fall back to the standard component with the shape and motion rules above if they're missing.
+Compose notes: the expressive components and `MaterialExpressiveTheme` / `MotionScheme.expressive()` ship in `androidx.compose.material3` 1.4+ and may need `@OptIn(ExperimentalMaterial3ExpressiveApi::class)`. `ExpressiveTheme` already uses them. Check the version in the project before using them, and fall back to `MaterialTheme` and the standard components with the shape and motion rules above if they're missing. Lists use `Modifier.animateItem(placementSpec = motionScheme.defaultSpatialSpec())`; full-screen panels use `rememberPredictiveBackProgress` + `Modifier.predictiveBack`; haptics go through `rememberHaptics()`.
 
 ## Screen patterns
 
@@ -148,6 +161,8 @@ Full recipes are in `docs/screen-patterns.md`. Choose one before laying out:
 6. **Outcome and celebration:** illustration or spinning shape → mono status badge → `display-large` sentence → stat tiles or summary → outlined secondary above filled "Done".
 7. **Settings:** profile hero in a tonal card → grouped lists titled in `primary` with switches, button groups and value rows.
 8. **Bottom-sheet capture:** scrim over the screen → sheet with mono eyebrow, display title, text fields, a choice row, destination chips, full-width primary.
+9. **Live readout (timer, stopwatch, countdown):** eyebrow → a near full-width `DigitRoll` (stacked for the largest size) → progress ring or wavy bar → Start/Pause between Reset and Lap, with a pulse and haptic on start/stop → laps sliding in as list rows.
+10. **List and detail (adaptive):** compact pushes the detail with predictive back; medium and up puts a `NavigationRail`, a ≤ 420dp list and the detail side by side; expanded opens the rail and may add a third pane.
 
 ## Do and don't
 
@@ -157,15 +172,19 @@ Full recipes are in `docs/screen-patterns.md`. Choose one before laying out:
 - **Do** design both light and dark themes, plus a compact and an expanded layout.
 - **Don't** use dividers, drop shadows on cards, or a coloured border stripe on one edge of a card.
 - **Don't** use more than one display face, or more than five colours in an illustration.
+- **Do** roll changing numbers, pulse objects that change state, and tick a haptic on each dial step.
 - **Don't** animate routine actions with bounce. Springs belong to spatial changes and celebrations.
+- **Don't** run more than one ambient loop on a screen, or any loop under reduced motion.
+- **Don't** use frosted glass, coloured glows or blur as surfaces; separate with tonal containers.
 - **Don't** hard-code hex values or radii; reference tokens.
 
 ## Final checklist
 
-- [ ] The screen follows one of the eight patterns and has a single hero.
+- [ ] The screen follows one of the ten patterns and has a single hero.
 - [ ] All colours, radii, spacing and type come from tokens; light and dark both checked.
 - [ ] Text meets 4.5:1 (3:1 for 24px+ text, icons and control borders); gain and loss carry arrows.
 - [ ] Pressable elements are 48dp+ and morph on press; selections morph shape.
-- [ ] Motion uses spatial springs for movement and effects springs for colour; reduced motion respected.
+- [ ] Motion uses spatial springs for movement and effects springs for colour, from the motion tokens; gestures carry their velocity; reduced motion removes movement and loops.
+- [ ] Haptics mark detents and outcomes (tick, confirm, start/stop), not every tap.
 - [ ] Copy is sentence case, second person, verbs on buttons, real units.
-- [ ] Compact and expanded layouts are both defined (bar ↔ rail, one pane ↔ list and detail).
+- [ ] Compact and expanded layouts are both defined (bar ↔ rail, one pane ↔ list and detail); Android goes edge to edge with predictive back.

@@ -41,7 +41,7 @@ def components():
 def page(title, body, depth=0, scripts=""):
     up = "../" * depth
     nav = [("Overview", f"{up}index.html#top"), ("Foundations", f"{up}index.html#foundations"), ("Components", f"{up}index.html#components"),
-           ("Skill", f"{up}docs/skill.html"), ("Brand book", f"{up}docs/brand-book.html"), ("Patterns", f"{up}docs/screen-patterns.html"), ("Palettes", f"{up}docs/seed-palettes.html")]
+           ("Skill", f"{up}docs/skill.html"), ("Brand book", f"{up}docs/brand-book.html"), ("Motion", f"{up}docs/motion.html"), ("Patterns", f"{up}docs/screen-patterns.html"), ("Palettes", f"{up}docs/seed-palettes.html")]
     links = "".join(f'<a href="{href}">{name}</a>' for name, href in nav)
     return f"""<!doctype html>
 <html lang="en">
@@ -119,7 +119,12 @@ def foundations():
             type_rows.append(f'<div class="ty"><span class="meta">{s["name"]}<br>{s["fontSize"]} / {s["lineHeight"]} · {s["fontWeight"]}</span><span class="{s["name"]}">{html.escape(s.get("sample", s["name"]))}</span></div>')
     radii = "".join(f'<div class="rad"><span style="border-radius:var(--{r["name"]})"></span>{r["name"]}<em>{r["value"]}</em></div>' for r in TOKENS["radius"]["tokens"])
     space = "".join(f'<div class="sp"><span style="width:var(--{css(s["name"])})"></span>{s["name"]}<em>{s["value"]}</em></div>' for s in TOKENS["spacing"]["tokens"])
-    shapes = "".join(f'<div class="shp" data-shape="{n}"></div>' for n in ["cookie4", "cookie6", "cookie9", "cookie12", "clover4", "flower5", "flower8", "sunny", "burst", "pebble", "circle"])
+    shapes = "".join(f'<div class="shp" data-shape="{n}"></div>' for n in ["circle", "cookie4", "cookie6", "cookie7", "cookie9", "cookie12", "clover4", "clover8", "flower5", "flower8", "sunny",
+                                                                  "softBurst", "burst", "boom", "pebble", "puffy", "square", "pill", "oval", "diamond",
+                                                                  "triangle", "pentagon", "gem", "heart", "arch"])
+    motion_rows = "".join(
+        f'<div class="mo"><span class="meta">{t["name"]}<br>{t["dampingRatio"]} / {t["stiffness"]}</span><span class="mo-track"><span class="mo-ball" style="transition: left var(--motion-{t["name"]}), background-color var(--motion-{t["name"]})"></span></span></div>'
+        for t in TOKENS["motion"]["schemes"][0]["tokens"])
     return f"""
 <section class="s-sec" id="foundations"><div class="s-in">
   <div class="eyebrow">Foundations</div>
@@ -134,8 +139,11 @@ def foundations():
     <div><h3 class="title-large">Spacing</h3><div class="spaces">{space}</div></div>
   </div>
   <h3 class="title-large">Shape library</h3>
-  <p class="body-medium muted">Cut avatars, hero seats and masks from these. Each kind of thing keeps one shape.</p>
+  <p class="body-medium muted">Cut avatars, hero seats and masks from these. Each kind of thing keeps one shape, and any shape can morph into any other.</p>
   <div class="shapes" id="shapes">{shapes}</div>
+  <h3 class="title-large">Motion</h3>
+  <p class="body-medium muted">Springs, not durations. Hover or tap a row: spatial springs overshoot, effects springs never do. See the <a href="docs/motion.html">motion recipes</a>.</p>
+  <div class="motions">{motion_rows}</div>
 </div></section>"""
 
 
@@ -219,7 +227,8 @@ def build():
 """
     docs = {"skill": ("SKILL.md", skill + import_md), "brand-book": ("Brand book", (ROOT / "docs/brand-book.md").read_text()),
             "screen-patterns": ("Screen patterns", (ROOT / "docs/screen-patterns.md").read_text()),
-            "seed-palettes": ("Seed palettes", (ROOT / "docs/seed-palettes.md").read_text())}
+            "seed-palettes": ("Seed palettes", (ROOT / "docs/seed-palettes.md").read_text()),
+            "motion": ("Motion recipes", (ROOT / "docs/motion.md").read_text())}
     for slug, (title, text) in docs.items():
         body = MD(text).replace("{#import}", "").replace("<h2>Import into Claude", '<h2 id="import">Import into Claude')
         (OUT / "docs" / f"{slug}.html").write_text(page(f"{title} · Expressive Kit", f'<article class="s-in s-doc">{body}</article>', 1))

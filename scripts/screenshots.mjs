@@ -2,7 +2,8 @@
 //   assets/banner-light.png, assets/banner-dark.png      feature graphic (1280x640 at 2x)
 //   assets/hero-light.png, assets/hero-dark.png          phone-only crop for the website hero
 //   assets/components/<Name>-light.png / -dark.png       one image per component preview
-// Usage, from the repository root:  npx playwright install chromium && node scripts/screenshots.mjs
+// Usage, from the repository root:  npx playwright install chromium && node scripts/screenshots.mjs [ComponentName ...]
+// With component names, only those component images are rendered (the banner is skipped).
 import { createRequire } from 'node:module';
 const { chromium } = createRequire(import.meta.url)('playwright');
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
@@ -18,23 +19,26 @@ const head = `<link rel="stylesheet" href="${root}/tokens/tokens.css"><link rel=
 <script src="${root}/components/bundle.js"></script>
 <style>body{width:560px;padding:8px 4px;box-sizing:border-box}#root{display:inline-block;min-width:520px}</style>`;
 
+const only = process.argv.slice(2);
 const browser = await chromium.launch();
 const errors = [];
 for (const theme of ['light', 'dark']) {
   const page = await browser.newPage({ deviceScaleFactor: 2, viewport: { width: 1280, height: 640 }, colorScheme: theme });
   page.on('pageerror', (e) => errors.push(e.message));
 
-  await page.goto('file://' + join(root, 'scripts/banner.html'));
-  await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, theme);
-  await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(1200);
-  await page.screenshot({ path: join(out, `banner-${theme}.png`) });
-  await page.screenshot({ path: join(out, `hero-${theme}.png`), clip: { x: 600, y: 0, width: 680, height: 640 } });
+  if (!only.length) {
+    await page.goto('file://' + join(root, 'scripts/banner.html'));
+    await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, theme);
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(1200);
+    await page.screenshot({ path: join(out, `banner-${theme}.png`) });
+    await page.screenshot({ path: join(out, `hero-${theme}.png`), clip: { x: 600, y: 0, width: 680, height: 640 } });
+  }
 
   await page.setViewportSize({ width: 560, height: 800 });
   for (const name of readdirSync(join(root, 'components')).sort()) {
     const file = join(root, 'components', name, 'preview.html');
-    if (name === 'Cover' || !existsSync(file)) continue;
+    if (name === 'Cover' || !existsSync(file) || (only.length && !only.includes(name))) continue;
     const html = readFileSync(file, 'utf8').replace('<head>', '<head>' + head).replace('<html', `<html data-theme="${theme}"`);
     const tmp = join(root, 'scripts', `.shot-${name}.html`);
     writeFileSync(tmp, html);

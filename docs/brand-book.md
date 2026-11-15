@@ -66,9 +66,12 @@ Expressive Kit is a Material 3 Expressive system for Android-first apps, distill
 
 ## Motion
 
-- M3 Expressive motion is springy. Spatial changes (position, size, shape) overshoot slightly: use `cubic-bezier(0.34, 1.4, 0.64, 1)` over 300–500ms. Effects (colour, opacity) never overshoot: `cubic-bezier(0.2, 0, 0, 1)` over 150–200ms.
-- Pressed pills morph their corners over 220ms. The nav indicator grows in from the centre. Switch thumbs grow when pressed and spring across.
-- Celebrate outcomes once: stars pop in sequence, a shape rotates slowly behind a mascot, a wavy progress bar travels. Respect `prefers-reduced-motion` by removing travel and rotation.
+- M3 Expressive motion is springy. Spatial changes (position, size, rotation, shape) use the `spatial-*` springs and overshoot slightly; effects (colour, opacity) use the `effects-*` springs and never overshoot. Reach for `var(--motion-spatial-default)` on the web and `MaterialTheme.motionScheme` in Compose; don't hand-tune curves.
+- Pressed pills morph their corners on `spatial-fast`. The nav indicator grows in from the centre. Switch thumbs grow when pressed and spring across.
+- Numbers that change roll digit by digit (`DigitRoll`). Objects that change state pulse once. Tapped icons may make one motion that fits their meaning (a bell wiggles, an hourglass flips).
+- Dials and drums tick a light haptic on each step; starting, stopping, confirming and refusing each have their own haptic. See `docs/motion.md`.
+- Celebrate outcomes once: stars pop in sequence, a shape rotates slowly behind a mascot, a wavy progress bar travels. At most one ambient loop per screen, and only for something live.
+- Respect `prefers-reduced-motion` (and Android's "Remove animations") by removing travel, bounce, rotation and loops; keep short fades.
 
 ## Iconography
 
