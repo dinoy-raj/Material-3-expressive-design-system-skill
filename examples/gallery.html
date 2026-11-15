@@ -31,6 +31,7 @@
 <section class="g-card"><header><h2 class="title-large">ButtonGroup</h2><span class="eyebrow">Actions</span></header><div id="c-ButtonGroup"></div></section>
 <section class="g-card"><header><h2 class="title-large">Card</h2><span class="eyebrow">Containment</span></header><div id="c-Card"></div></section>
 <section class="g-card"><header><h2 class="title-large">Chip</h2><span class="eyebrow">Selection</span></header><div id="c-Chip"></div></section>
+<section class="g-card"><header><h2 class="title-large">DigitRoll</h2><span class="eyebrow">Status</span></header><div id="c-DigitRoll"></div></section>
 <section class="g-card"><header><h2 class="title-large">Fab</h2><span class="eyebrow">Actions</span></header><div id="c-Fab"></div></section>
 <section class="g-card"><header><h2 class="title-large">FloatingToolbar</h2><span class="eyebrow">Navigation</span></header><div id="c-FloatingToolbar"></div></section>
 <section class="g-card"><header><h2 class="title-large">GroupedList</h2><span class="eyebrow">Containment</span></header><div id="c-GroupedList"></div></section>
@@ -38,6 +39,8 @@
 <section class="g-card"><header><h2 class="title-large">ListItem</h2><span class="eyebrow">Containment</span></header><div id="c-ListItem"></div></section>
 <section class="g-card"><header><h2 class="title-large">LoadingIndicator</h2><span class="eyebrow">Status</span></header><div id="c-LoadingIndicator"></div></section>
 <section class="g-card"><header><h2 class="title-large">NavigationBar</h2><span class="eyebrow">Navigation</span></header><div id="c-NavigationBar"></div></section>
+<section class="g-card"><header><h2 class="title-large">NavigationRail</h2><span class="eyebrow">Navigation</span></header><div id="c-NavigationRail"></div></section>
+<section class="g-card"><header><h2 class="title-large">RotaryDial</h2><span class="eyebrow">Selection</span></header><div id="c-RotaryDial"></div></section>
 <section class="g-card"><header><h2 class="title-large">SearchBar</h2><span class="eyebrow">Inputs</span></header><div id="c-SearchBar"></div></section>
 <section class="g-card"><header><h2 class="title-large">ShapeAvatar</h2><span class="eyebrow">Identity</span></header><div id="c-ShapeAvatar"></div></section>
 <section class="g-card"><header><h2 class="title-large">Slider</h2><span class="eyebrow">Selection</span></header><div id="c-Slider"></div></section>
@@ -47,6 +50,7 @@
 <section class="g-card"><header><h2 class="title-large">SummaryList</h2><span class="eyebrow">Containment</span></header><div id="c-SummaryList"></div></section>
 <section class="g-card"><header><h2 class="title-large">Switch</h2><span class="eyebrow">Selection</span></header><div id="c-Switch"></div></section>
 <section class="g-card"><header><h2 class="title-large">TextField</h2><span class="eyebrow">Inputs</span></header><div id="c-TextField"></div></section>
+<section class="g-card"><header><h2 class="title-large">TimePickerDial</h2><span class="eyebrow">Selection</span></header><div id="c-TimePickerDial"></div></section>
 <section class="g-card"><header><h2 class="title-large">TopBar</h2><span class="eyebrow">Navigation</span></header><div id="c-TopBar"></div></section>
 <section class="g-card"><header><h2 class="title-large">ValuePill</h2><span class="eyebrow">Status</span></header><div id="c-ValuePill"></div></section>
 <section class="g-card"><header><h2 class="title-large">WavyProgress</h2><span class="eyebrow">Status</span></header><div id="c-WavyProgress"></div></section>
@@ -83,6 +87,7 @@
   ReactDOM.createRoot(document.getElementById('c-Chip')).render(h('div',{className:'ex-stage'},
   h('div',{className:'ex-row'}, h(E.Chip,{label:'Want to read',count:1}), h(E.Chip,{label:'Reading',count:1,defaultSelected:true,icon:'auto_stories'}), h(E.Chip,{label:'Read',count:1}), h(E.Chip,{label:'Glass of oat milk +$2.50',defaultSelected:true})),
   h('div',{className:'ex-row'}, h(E.Chip,{label:'All',variant:'tonal',defaultSelected:true}), h(E.Chip,{label:'Photos',variant:'tonal'}), h(E.Chip,{label:'Colour',variant:'tonal'}), h(E.Chip,{label:'Type',variant:'tonal'}), h(E.Chip,{label:'Words',variant:'tonal'}))));
+  ReactDOM.createRoot(document.getElementById('c-DigitRoll')).render(h(function DigitRollDemo(){ var s=React.useState(1509), n=s[0]; React.useEffect(function(){ var id=setInterval(function(){ s[1](function(x){ return x>0?x-1:1509; }); },1000); return function(){ clearInterval(id); }; },[]); var mm=Math.floor(n/60), ss=n%60, p=function(v){return (v<10?'0':'')+v;}; return h('div',{className:'ex-stage',style:{gap:'20px'}}, h('div',null, h('div',{className:'eyebrow',style:{color:'var(--on-surface-variant)'}},'Focus timer'), h(E.DigitRoll,{value:p(mm)+':'+p(ss),label:mm+' minutes '+ss+' seconds left'})), h('div',{className:'ex-row',style:{gap:'32px',alignItems:'flex-end'}}, h(E.DigitRoll,{value:['00',p(mm),p(ss)],stacked:true,className:'numeral-medium',label:'Stacked readout'}), h('div',null, h('div',{className:'eyebrow',style:{color:'var(--on-surface-variant)'}},'Balance'), h(E.DigitRoll,{value:'$'+(2400+(1509-n)*3).toLocaleString('en-US'),className:'numeral-small'})))); }));
   ReactDOM.createRoot(document.getElementById('c-Fab')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'16px',alignItems:'center'}},
   h(E.Fab,{icon:'add',ariaLabel:'Add book'}), h(E.Fab,{icon:'add',label:'Add flights'}), h(E.Fab,{icon:'add',label:'New collection',tone:'secondary'}), h(E.Fab,{icon:'photo_camera',label:'Shoot',tone:'highlight',size:'lg'}))));
   ReactDOM.createRoot(document.getElementById('c-FloatingToolbar')).render(h('div',{className:'ex-stage'}, h(E.FloatingToolbar,{defaultValue:1,items:[{icon:'crop',label:'Crop',toggle:true},{icon:'tune',label:'Adjust',toggle:true},{icon:'filter_vintage',label:'Filters',toggle:true},{icon:'text_fields',label:'Text',toggle:true}],fab:{icon:'check',ariaLabel:'Done'}}), h(E.FloatingToolbar,{vibrant:true,defaultValue:0,items:[{icon:'layers',label:'Layers',toggle:true},{icon:'my_location',label:'My location'},{icon:'local_cafe',label:'Pit stops',toggle:true},{icon:'park',label:'Sights',toggle:true}]})));
@@ -101,10 +106,22 @@
   h(E.ListItem,{leading:h(E.ShapeAvatar,{shape:'flower8',text:'L',tone:'tertiary-container'}),headline:'LUTE',supporting:'Lute Audio',trailing:h(E.ValuePill,{direction:'down',solid:true},'$241.15'),onClick:function(){}})));
   ReactDOM.createRoot(document.getElementById('c-LoadingIndicator')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'28px',alignItems:'center'}}, h(E.LoadingIndicator,{size:40}), h(E.LoadingIndicator,{size:56}), h(E.LoadingIndicator,{size:56,contained:true}), h(E.LoadingIndicator,{size:80,contained:true,label:'Loading routes'}))));
   ReactDOM.createRoot(document.getElementById('c-NavigationBar')).render(h('div',{style:{maxWidth:420}}, h(E.NavigationBar,{defaultValue:0,items:[{icon:'show_chart',label:'Home'},{icon:'explore',label:'Explore'},{icon:'receipt_long',label:'Activity',badge:2},{icon:'account_circle',label:'Account'}]})));
+  ReactDOM.createRoot(document.getElementById('c-NavigationRail')).render(h('div',{className:'ex-row',style:{alignItems:'stretch',gap:'24px',height:380,padding:'8px'}}, h(E.NavigationRail,{label:'Main',fab:{icon:'add',label:'New alarm'},items:[{icon:'alarm',label:'Alarms'},{icon:'public',label:'World'},{icon:'timer',label:'Timers',badge:2},{icon:'avg_pace',label:'Stopwatch'}]}), h(E.NavigationRail,{label:'Expanded',defaultExpanded:true,defaultValue:2,fab:{icon:'add',label:'New timer'},items:[{icon:'alarm',label:'Alarms'},{icon:'public',label:'World'},{icon:'timer',label:'Timers',badge:2},{icon:'avg_pace',label:'Stopwatch'}]})));
+  ReactDOM.createRoot(document.getElementById('c-RotaryDial')).render(h('div',{className:'ex-stage',style:{maxWidth:440,gap:'20px'}}, h(E.RotaryDial,{label:'Focus length',defaultValue:25,min:5,max:90,format:function(v){return v+' min';}})));
   ReactDOM.createRoot(document.getElementById('c-SearchBar')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.SearchBar,{id:'s1',placeholder:'Search stocks, funds and crypto'}), h(E.SearchBar,{id:'s2',placeholder:'Search titles, authors, ISBNs',defaultValue:'Dune'})));
-  ReactDOM.createRoot(document.getElementById('c-ShapeAvatar')).render(h('div',{className:'ex-stage'}, h('div',{className:'ex-row',style:{gap:'14px'}},
-  ['cookie9','cookie6','clover4','flower5','flower8','sunny','burst','pebble','cookie4','cookie12'].map(function(s,i){ var tones=['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container','primary-container','tertiary-container','highlight']; return h(E.ShapeAvatar,{key:s,shape:s,size:52,tone:tones[i],text:s.charAt(0).toUpperCase(),label:s}); }),
-  h(E.ShapeAvatar,{shape:'flower8',size:88,tone:'primary',icon:'music_note',spin:true,label:'Trill'}))));
+  ReactDOM.createRoot(document.getElementById('c-ShapeAvatar')).render(h(function ShapeDemo() {
+    var tones = ['highlight','primary-container','secondary','tertiary-container','primary','positive','secondary-container'];
+    var seq = ['cookie9','flower8','heart','gem','clover4','sunny'];
+    var s = React.useState(0);
+    React.useEffect(function () { var id = setInterval(function () { s[1](function (x) { return (x + 1) % seq.length; }); }, 1600); return function () { clearInterval(id); }; }, []);
+    return h('div', { className: 'ex-stage' },
+      h('div', { className: 'ex-row', style: { gap: '10px' } }, E.ShapeAvatar.shapes.map(function (name, i) {
+        return h(E.ShapeAvatar, { key: name, shape: name, size: 40, tone: tones[i % tones.length], label: name });
+      })),
+      h('div', { className: 'ex-row', style: { gap: '16px', marginTop: '8px' } },
+        h(E.ShapeAvatar, { shape: seq[s[0]], size: 88, tone: 'primary', icon: 'favorite', label: 'Morphing shape' }),
+        h(E.ShapeAvatar, { shape: 'flower8', size: 88, tone: 'tertiary-container', icon: 'music_note', spin: true, label: 'Trill' })));
+  }));
   ReactDOM.createRoot(document.getElementById('c-Slider')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.Slider,{id:'r1',label:'Backup reserve',defaultValue:30,format:function(v){return v+'%';},supportingText:'Held back for outages. More is safer; less leaves more sunshine for your evenings.'})));
   ReactDOM.createRoot(document.getElementById('c-Snackbar')).render(h('div',{className:'ex-stage',style:{maxWidth:440}}, h(E.Snackbar,{message:'Saved to Favourites',action:'Undo'}), h(E.Snackbar,{message:'Order placed. Crumb & Co. is warming the oven.',action:'Track'})));
   ReactDOM.createRoot(document.getElementById('c-SplitButton')).render(h('div',{className:'ex-stage',style:{minHeight:'220px'}}, h('div',{className:'ex-row',style:{gap:'16px',alignItems:'flex-start'}}, h(E.SplitButton,{icon:'ios_share',defaultOpen:true,items:[{label:'Copy link',icon:'link'},{label:'Send to a friend',icon:'send'},{label:'Show QR code',icon:'qr_code_2'}]},'Share'), h(E.SplitButton,{variant:'tonal',icon:'save'},'Save'), h(E.SplitButton,{variant:'outlined'},'Export'))));
@@ -116,6 +133,7 @@
   h(E.TextField,{id:'f2',label:'Author(s)',defaultValue:'Susanna Clarke',supportingText:'Separate several with commas'}),
   h(E.TextField,{id:'f3',label:'ISBN',defaultValue:'97816355756',error:'ISBNs have 13 digits, or 10 for older books',inputMode:'numeric'}),
   h(E.TextField,{id:'f4',label:'Note (optional)',variant:'filled',placeholder:'Where? Any notes?'})));
+  ReactDOM.createRoot(document.getElementById('c-TimePickerDial')).render(h('div',{className:'ex-stage',style:{alignItems:'flex-start'}}, h(E.TimePickerDial,{defaultHour:7,defaultMinute:30,label:'Alarm time'})));
   ReactDOM.createRoot(document.getElementById('c-TopBar')).render(h('div',{style:{maxWidth:420}},
   h(E.TopBar,{leading:'back',actions:[{icon:'star',label:'Watch'}],eyebrow:'Review · Market order',title:'Buy $100.00 of ACRN',subtitle:'Acorn Semiconductor',display:true}),
   h(E.TopBar,{size:'small',leading:'close',title:'Review and book',actions:[{icon:'more_vert',label:'More'}]})));

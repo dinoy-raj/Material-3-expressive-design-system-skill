@@ -1,22 +1,39 @@
 // Expressive Kit, generated from tokens/tokens.json by scripts/build.py. Do not edit by hand.
-// Fonts: add Google Sans Flex, Fraunces and Google Sans Code with downloadable fonts
-// (androidx.compose.ui:ui-text-google-fonts) or as res/font files, then replace the families below.
+// Fonts: add Google Sans Flex, Fraunces and Google Sans Code as res/font files (or downloadable fonts),
+// then pass them to expressiveTypography(), e.g.
+//   expressiveTypography(sans = { size -> variableFontFamily(R.font.google_sans_flex, size) })
+// Requires androidx.compose.material3 1.4 or later for MaterialExpressiveTheme and MotionScheme.
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package design.expressive.kit
 
+import android.os.Build
+import androidx.annotation.FontRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LocalTonalElevationEnabled
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,6 +41,34 @@ import androidx.compose.ui.unit.sp
 val SansFamily: FontFamily = FontFamily.SansSerif
 val DisplayFamily: FontFamily = FontFamily.Serif
 val MonoFamily: FontFamily = FontFamily.Monospace
+
+private val familyCache = HashMap<Pair<Int, Int>, FontFamily>()
+
+/**
+ * A variable font pinned to one optical size, with real cuts at each weight.
+ *
+ * M3 type tokens set the `opsz` axis equal to the font size, so small text gets the sturdier
+ * text cut and large text the tighter display cut from one font file. Pass the result to
+ * [expressiveTypography] per size.
+ */
+fun variableFontFamily(
+    @FontRes resId: Int,
+    opticalSize: Float,
+    weights: IntArray = intArrayOf(400, 500, 600, 700, 800),
+): FontFamily = familyCache.getOrPut(resId to opticalSize.toInt()) {
+    FontFamily(
+        weights.map { w ->
+            Font(
+                resId = resId,
+                weight = FontWeight(w),
+                variationSettings = FontVariation.Settings(
+                    FontVariation.weight(w),
+                    FontVariation.Setting("opsz", opticalSize.coerceIn(6f, 144f)),
+                ),
+            )
+        },
+    )
+}
 
 val ExpressiveLightColors = lightColorScheme(
     primary = Color(0xFFA8330F),
@@ -123,31 +168,74 @@ val ExpressiveDarkExtended = ExtendedColors(
 
 val LocalExtendedColors = staticCompositionLocalOf { ExpressiveLightExtended }
 
+/**
+ * True-black variant of a dark scheme for OLED screens. The page goes black and the low
+ * containers darken, so cards on `surfaceContainer` and above separate more, not less.
+ */
+fun ColorScheme.toAmoledBlack(): ColorScheme = copy(
+    background = Color.Black,
+    surface = Color.Black,
+    surfaceDim = Color.Black,
+    surfaceContainerLowest = Color.Black,
+    surfaceContainerLow = lerp(surfaceContainerLow, Color.Black, 0.6f),
+    surfaceContainer = lerp(surfaceContainer, Color.Black, 0.35f),
+    scrim = Color.Black,
+)
+
 val ExpressiveShapes = Shapes(
     extraSmall = RoundedCornerShape(4.dp),
     small = RoundedCornerShape(8.dp),
     medium = RoundedCornerShape(12.dp),
     large = RoundedCornerShape(16.dp),
+    largeIncreased = RoundedCornerShape(20.dp),
     extraLarge = RoundedCornerShape(28.dp),
+    extraLargeIncreased = RoundedCornerShape(32.dp),
+    extraExtraLarge = RoundedCornerShape(48.dp),
 )
 
-val ExpressiveTypography = Typography(
-    displayLarge = TextStyle(fontFamily = DisplayFamily, fontSize = 57.sp, lineHeight = 64.sp, fontWeight = FontWeight(600), letterSpacing = (-0.5).sp),
-    displayMedium = TextStyle(fontFamily = DisplayFamily, fontSize = 45.sp, lineHeight = 52.sp, fontWeight = FontWeight(600), letterSpacing = (-0.25).sp),
-    displaySmall = TextStyle(fontFamily = DisplayFamily, fontSize = 36.sp, lineHeight = 44.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
-    headlineLarge = TextStyle(fontFamily = SansFamily, fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight(700), letterSpacing = (-0.5).sp),
-    headlineMedium = TextStyle(fontFamily = SansFamily, fontSize = 28.sp, lineHeight = 36.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
-    headlineSmall = TextStyle(fontFamily = SansFamily, fontSize = 24.sp, lineHeight = 32.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
-    titleLarge = TextStyle(fontFamily = SansFamily, fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
-    titleMedium = TextStyle(fontFamily = SansFamily, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
-    titleSmall = TextStyle(fontFamily = SansFamily, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
-    bodyLarge = TextStyle(fontFamily = SansFamily, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(400), letterSpacing = (0).sp),
-    bodyMedium = TextStyle(fontFamily = SansFamily, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(400), letterSpacing = (0.25).sp),
-    bodySmall = TextStyle(fontFamily = SansFamily, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(400), letterSpacing = (0.4).sp),
-    labelLarge = TextStyle(fontFamily = SansFamily, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
-    labelMedium = TextStyle(fontFamily = SansFamily, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(600), letterSpacing = (0.5).sp),
-    labelSmall = TextStyle(fontFamily = SansFamily, fontSize = 11.sp, lineHeight = 16.sp, fontWeight = FontWeight(600), letterSpacing = (0.5).sp),
-)
+/**
+ * The type scale with all fifteen emphasized twins. Each family lambda receives the style's
+ * font size so a variable font can pin its optical size to it (see [variableFontFamily]).
+ */
+fun expressiveTypography(
+    sans: (Float) -> FontFamily = { SansFamily },
+    display: (Float) -> FontFamily = { DisplayFamily },
+): Typography {
+    return Typography(
+        displayLarge = TextStyle(fontFamily = display(57f), fontSize = 57.sp, lineHeight = 64.sp, fontWeight = FontWeight(600), letterSpacing = (-0.5).sp),
+        displayMedium = TextStyle(fontFamily = display(45f), fontSize = 45.sp, lineHeight = 52.sp, fontWeight = FontWeight(600), letterSpacing = (-0.25).sp),
+        displaySmall = TextStyle(fontFamily = display(36f), fontSize = 36.sp, lineHeight = 44.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
+        headlineLarge = TextStyle(fontFamily = sans(32f), fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight(700), letterSpacing = (-0.5).sp),
+        headlineMedium = TextStyle(fontFamily = sans(28f), fontSize = 28.sp, lineHeight = 36.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
+        headlineSmall = TextStyle(fontFamily = sans(24f), fontSize = 24.sp, lineHeight = 32.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
+        titleLarge = TextStyle(fontFamily = sans(22f), fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight(600), letterSpacing = (0).sp),
+        titleMedium = TextStyle(fontFamily = sans(16f), fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
+        titleSmall = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
+        bodyLarge = TextStyle(fontFamily = sans(16f), fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(400), letterSpacing = (0).sp),
+        bodyMedium = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(400), letterSpacing = (0.25).sp),
+        bodySmall = TextStyle(fontFamily = sans(12f), fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(400), letterSpacing = (0.4).sp),
+        labelLarge = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(600), letterSpacing = (0.1).sp),
+        labelMedium = TextStyle(fontFamily = sans(12f), fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(600), letterSpacing = (0.5).sp),
+        labelSmall = TextStyle(fontFamily = sans(11f), fontSize = 11.sp, lineHeight = 16.sp, fontWeight = FontWeight(600), letterSpacing = (0.5).sp),
+        displayLargeEmphasized = TextStyle(fontFamily = display(57f), fontSize = 57.sp, lineHeight = 64.sp, fontWeight = FontWeight(700), letterSpacing = (-0.5).sp),
+        displayMediumEmphasized = TextStyle(fontFamily = display(45f), fontSize = 45.sp, lineHeight = 52.sp, fontWeight = FontWeight(700), letterSpacing = (-0.25).sp),
+        displaySmallEmphasized = TextStyle(fontFamily = display(36f), fontSize = 36.sp, lineHeight = 44.sp, fontWeight = FontWeight(700), letterSpacing = (0).sp),
+        headlineLargeEmphasized = TextStyle(fontFamily = sans(32f), fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight(800), letterSpacing = (-0.5).sp),
+        headlineMediumEmphasized = TextStyle(fontFamily = sans(28f), fontSize = 28.sp, lineHeight = 36.sp, fontWeight = FontWeight(700), letterSpacing = (0).sp),
+        headlineSmallEmphasized = TextStyle(fontFamily = sans(24f), fontSize = 24.sp, lineHeight = 32.sp, fontWeight = FontWeight(700), letterSpacing = (0).sp),
+        titleLargeEmphasized = TextStyle(fontFamily = sans(22f), fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight(700), letterSpacing = (0).sp),
+        titleMediumEmphasized = TextStyle(fontFamily = sans(16f), fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(700), letterSpacing = (0.1).sp),
+        titleSmallEmphasized = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(700), letterSpacing = (0.1).sp),
+        bodyLargeEmphasized = TextStyle(fontFamily = sans(16f), fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight(500), letterSpacing = (0).sp),
+        bodyMediumEmphasized = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(500), letterSpacing = (0.25).sp),
+        bodySmallEmphasized = TextStyle(fontFamily = sans(12f), fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(500), letterSpacing = (0.4).sp),
+        labelLargeEmphasized = TextStyle(fontFamily = sans(14f), fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(700), letterSpacing = (0.1).sp),
+        labelMediumEmphasized = TextStyle(fontFamily = sans(12f), fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight(700), letterSpacing = (0.5).sp),
+        labelSmallEmphasized = TextStyle(fontFamily = sans(11f), fontSize = 11.sp, lineHeight = 16.sp, fontWeight = FontWeight(700), letterSpacing = (0.5).sp),
+    )
+}
+
+val ExpressiveTypography = expressiveTypography()
 
 /** Styles beyond the Material type scale: hero numerals and mono data labels. */
 object ExpressiveTextStyles {
@@ -159,13 +247,53 @@ object ExpressiveTextStyles {
     val dataSmall = TextStyle(fontFamily = MonoFamily, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight(500), letterSpacing = (0.3).sp)
 }
 
+/**
+ * The Expressive Kit theme.
+ *
+ * Uses [MaterialExpressiveTheme], which installs the expressive motion scheme, shapes and
+ * emphasized type. Motion tokens map onto the scheme's springs (damping ratio / stiffness):
+ *   spatial-fast     expressive 0.6 / 800   standard 0.9 / 1400  -> MaterialTheme.motionScheme.fastSpatialSpec()
+ *   spatial-default  expressive 0.8 / 380   standard 0.9 / 700   -> MaterialTheme.motionScheme.defaultSpatialSpec()
+ *   spatial-slow     expressive 0.8 / 200   standard 0.9 / 300   -> MaterialTheme.motionScheme.slowSpatialSpec()
+ *   effects-fast     expressive 1.0 / 3800  standard 1.0 / 3800  -> MaterialTheme.motionScheme.fastEffectsSpec()
+ *   effects-default  expressive 1.0 / 1600  standard 1.0 / 1600  -> MaterialTheme.motionScheme.defaultEffectsSpec()
+ *   effects-slow     expressive 1.0 / 800   standard 1.0 / 800   -> MaterialTheme.motionScheme.slowEffectsSpec()
+ * Read them from `MaterialTheme.motionScheme` rather than hard-coding springs.
+ *
+ * @param motionScheme [MotionScheme.expressive] for consumer and playful apps (overshoot), or
+ *   [MotionScheme.standard] for productivity and utility apps (no visible bounce).
+ * @param dynamicColor derive colours from the wallpaper on Android 12+. Off by default so the
+ *   brand palette shows; keep brand moments (hero cards, illustrations) on brand colours either way.
+ * @param amoledBlack in dark theme, use a true-black page for OLED screens.
+ */
 @Composable
-fun ExpressiveTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalExtendedColors provides if (darkTheme) ExpressiveDarkExtended else ExpressiveLightExtended) {
-        MaterialTheme(
-            colorScheme = if (darkTheme) ExpressiveDarkColors else ExpressiveLightColors,
+fun ExpressiveTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    motionScheme: MotionScheme = MotionScheme.expressive(),
+    dynamicColor: Boolean = false,
+    amoledBlack: Boolean = false,
+    typography: Typography = ExpressiveTypography,
+    content: @Composable () -> Unit,
+) {
+    val context = LocalContext.current
+    val base = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        darkTheme -> ExpressiveDarkColors
+        else -> ExpressiveLightColors
+    }
+    val amoled = darkTheme && amoledBlack
+    val colorScheme = remember(base, amoled) { if (amoled) base.toAmoledBlack() else base }
+    CompositionLocalProvider(
+        LocalExtendedColors provides if (darkTheme) ExpressiveDarkExtended else ExpressiveLightExtended,
+        // Tonal elevation would paint grey back over a true-black page.
+        LocalTonalElevationEnabled provides !amoled,
+    ) {
+        MaterialExpressiveTheme(
+            colorScheme = colorScheme,
+            motionScheme = motionScheme,
             shapes = ExpressiveShapes,
-            typography = ExpressiveTypography,
+            typography = typography,
             content = content,
         )
     }
