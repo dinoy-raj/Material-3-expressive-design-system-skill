@@ -1,6 +1,6 @@
 {
   "name": "expressive-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Material 3 Expressive design system and AI skill: tokens, React components, Compose theme and guidelines.",
   "main": "components/bundle.js",
@@ -15,10 +15,12 @@
   },
   "files": [
     "SKILL.md",
+    "LICENSE",
     "tokens",
     "components",
     "android",
-    "docs"
+    "docs",
+    "templates"
   ],
   "peerDependencies": {
     "react": "^18.3.1",
@@ -27,6 +29,8 @@
   "scripts": {
     "build": "python3 scripts/build.py",
     "images": "node scripts/screenshots.mjs",
-    "site": "python3 scripts/build_site.py"
-  }
+    "site": "python3 scripts/build_site.py",
+    "validate": "python3 scripts/validate_skill.py"
+  },
+  "license": "MIT"
 }

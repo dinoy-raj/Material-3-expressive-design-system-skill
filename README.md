@@ -11,7 +11,8 @@
 - **29 components** for the web (React 18), including the new M3 Expressive ones: connected button groups, split buttons, floating toolbars, wavy progress, the morphing loading indicator, a navigation rail, a time picker dial, a rotary dial and rolling digits, plus a 25-shape library that morphs.
 - **A Jetpack Compose theme** generated from the same tokens (`MaterialExpressiveTheme`, expressive motion scheme, emphasized type, dynamic colour, true black), plus motion helpers and extra components.
 - **An AI skill** ([`SKILL.md`](SKILL.md)) that teaches Claude or any AI tool M3 Expressive shape, motion, emphasis, component patterns and screen patterns.
-- **Guidelines:** a [brand book](docs/brand-book.md), [motion recipes](docs/motion.md), [ten screen patterns](docs/screen-patterns.md) and [ten seed palettes](docs/seed-palettes.md).
+- **Guidelines:** a [brand book](docs/brand-book.md), [motion recipes](docs/motion.md), [ten screen patterns](docs/screen-patterns.md) with loading, empty, error and offline states, and [ten seed palettes](docs/seed-palettes.md).
+- **Production guides:** [accessibility and localization](docs/accessibility.md) (gesture alternatives, font scaling, RTL), [working in an existing app](docs/existing-projects.md), [other platforms](docs/platforms.md) (Views, Wear OS, Flutter, React Native, SwiftUI, with spring conversions), a [review checklist](docs/review.md) with a verdict, and [brief and handoff templates](templates/).
 - **A website** with live components at [dinoyraj.com/material-3-expressive-skill](https://dinoyraj.com/material-3-expressive-skill), redeployed on every merge to `main`.
 
 ## Contents
@@ -28,7 +29,7 @@
 
 The repository root is a skill: [`SKILL.md`](SKILL.md) plus the files it references.
 
-- **Claude apps:** download `material-3-expressive-skill.zip` from the website (or zip the `SKILL.md`, `tokens/`, `docs/`, `components/` and `android/` into a folder named `material-3-expressive`). Then open Settings → Capabilities → Skills and upload it.
+- **Claude apps:** download `material-3-expressive-skill.zip` from the website (or zip `SKILL.md`, `LICENSE`, `tokens/`, `docs/`, `components/`, `android/` and `templates/` into a folder named `material-3-expressive`). Then open Settings → Capabilities → Skills and upload it.
 - **Claude Code:** unzip it into `~/.claude/skills/` for all projects, or `.claude/skills/` in one project. Claude uses it whenever you ask for Material 3 Expressive UI.
 - **Other AI tools:** add `SKILL.md` to the tool's rules or context. It links to every token, guideline and component file it needs.
 
@@ -170,11 +171,13 @@ The full rules are in [`SKILL.md`](SKILL.md). In short:
 | `android/ExpressiveMotion.kt`, `android/ExpressiveComponents.kt` | Compose motion helpers (digit roll, pulse, haptics, predictive back, swipe to delete) and the rotary and time dials. |
 | `components/bundle.js`, `bundle.css`, `index.d.ts` | The component library (`window.Expressive`), its styles and its types. |
 | `components/<Name>/` | `README.md` guideline and `preview.html` example per component; `Cover/` is the design system cover. |
-| `docs/` | Brand book, motion recipes, screen patterns, seed palettes. |
+| `docs/` | Brand book, motion recipes, screen patterns and states, seed palettes, accessibility, existing projects, platforms, review. |
+| `templates/` | Design brief and implementation handoff. |
 | `examples/gallery.html` | Every component on one page. |
 | `assets/` | Feature graphic and component images used here and on the website. |
-| `scripts/` | Build scripts for tokens, images and the website. |
+| `scripts/` | Build scripts for tokens, images and the website; `validate_skill.py` checks `SKILL.md` and every file it points to. |
 | `.github/workflows/pages.yml` | Builds and deploys the website on every push to `main`. |
+| `.github/workflows/validate.yml` | Validates the skill on every push and pull request. |
 
 ## Development
 
@@ -192,6 +195,12 @@ npm install --no-save playwright && npx playwright install chromium && node scri
 
 Pass component names to re-shoot only those, for example `node scripts/screenshots.mjs DigitRoll ShapeAvatar`.
 
+Check the skill (frontmatter, size, and that every file `SKILL.md` and the guides point to exists):
+
+```bash
+python3 scripts/validate_skill.py
+```
+
 Build and preview the website locally:
 
 ```bash
@@ -205,6 +214,10 @@ Then open http://localhost:3000. `SITE_BASE=/` builds the site for the root; the
 `.github/workflows/pages.yml` builds the website and the downloadable skill on every push to `main`, then deploys to GitHub Pages. One-time setup: in the repository's Settings → Pages, set **Source** to **GitHub Actions**.
 
 The same build is served at [dinoyraj.com/material-3-expressive-skill](https://dinoyraj.com/material-3-expressive-skill): `vercel.json` in the [portfolio-website](https://github.com/dinoy-raj/portfolio-website) repository rewrites that path to the GitHub Pages site, so each Pages deploy shows up there with no extra step. Both hosts share the path prefix, which is why every link the site builder writes is root-absolute under it. Pages are styled after dinoyraj.com (`scripts/site.css`).
+
+## License
+
+[MIT](LICENSE). Material Design and Jetpack Compose are trademarks of Google LLC; this project isn't affiliated with or endorsed by Google.
 
 ## Credits
 
