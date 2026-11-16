@@ -446,12 +446,12 @@ def build_gallery():
 <style>
   .g-wrap {{ max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-4); }}
   .g-top {{ display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }}
-  .g-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: var(--space-4); margin-top: var(--space-6); align-items: start; }}
-  .g-card {{ background: var(--surface-container-lowest); border-radius: var(--shape-xl); overflow: hidden; min-width: 0; }}
+  .g-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: var(--space-4); margin-top: var(--space-6); }}
+  .g-card {{ display: flex; flex-direction: column; background: var(--surface-container-lowest); border-radius: var(--shape-xl); overflow: hidden; min-width: 0; min-height: 360px; }}
   .g-card > header {{ display: flex; align-items: baseline; justify-content: space-between; padding: var(--space-4) var(--space-5) 0; }}
   .g-card > header h2 {{ margin: 0; }}
   .g-card > header .eyebrow {{ color: var(--on-surface-variant); }}
-  .g-card > div {{ padding: var(--space-2) 0 var(--space-3); }}
+  .g-card > div {{ flex: 1; display: flex; flex-direction: column; justify-content: center; padding: var(--space-2) 0 var(--space-3); overflow-x: auto; }}
 </style>
 </head>
 <body>
