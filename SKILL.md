@@ -1,6 +1,11 @@
 ---
 name: material-3-expressive
-description: Design and build Material 3 Expressive (M3E) apps and screens with the Expressive Kit design system. Use when asked to design, mock up, review or code UI in the Material 3 Expressive style for Android (Jetpack Compose), the web (React/HTML/CSS) or a design tool. Covers M3E tokens (colour roles, type scale with emphasized styles, shape scale, spacing, spring motion tokens), the 25-shape library and shape morphing, motion recipes (digit roll, state pulse, list placement, swipe to delete, predictive back, icon micro-motion, haptics, reduced motion), component patterns (button groups, split buttons, FABs, floating toolbars, navigation bar and rail, time picker dial, rotary dial, wavy progress, loading indicator, sliders, cards, lists, sheets) and ten ready-made screen patterns.
+description: Design, build and review Material 3 Expressive (M3E) apps and screens with the Expressive Kit design system. Use when asked to design, mock up, review, audit or code UI in the Material 3 Expressive style for Android (Jetpack Compose), the web (React/HTML/CSS), another toolkit (Views, Wear OS, Flutter, React Native, SwiftUI) or a design tool, in a new app or an existing codebase. Covers M3E tokens (colour roles, emphasized type, shape scale, spacing, spring motion), the 25-shape library and shape morphing, motion recipes and haptics, component patterns (button groups, split buttons, FABs, floating toolbars, navigation bar and rail, dials, wavy progress, loading indicator, sheets), ten screen patterns with loading, empty, error and offline states, accessibility (gesture alternatives, font scaling, RTL, localization) and a review checklist with a verdict.
+license: MIT
+compatibility: Any Agent Skills client. No runtime dependencies for the guidance; the web components need React 18 and the Compose files need androidx.compose.material3 1.4+.
+metadata:
+  author: dinoy-raj
+  version: "0.2.0"
 ---
 
 # Material 3 Expressive design skill
@@ -18,15 +23,38 @@ Read this file first. Go deeper only when you need to:
 | A different product colour | `docs/seed-palettes.md` |
 | One component's props and do's and don'ts | `components/<Name>/README.md` and `components/index.d.ts` |
 | Android Compose theme | `android/ExpressiveTheme.kt` |
+| Adding M3E to an app that already has a theme | `docs/existing-projects.md` |
+| Touch targets, gesture alternatives, screen readers, font scaling, RTL, localization | `docs/accessibility.md` |
+| Views, Wear OS, Flutter, React Native, SwiftUI; converting springs; official sources | `docs/platforms.md` |
+| Reviewing or auditing a design or pull request | `docs/review.md` |
+| A written brief before a big design, or a handoff after building | `templates/design-brief.md`, `templates/implementation-handoff.md` |
 | Compose motion helpers and extra components | `android/ExpressiveMotion.kt`, `android/ExpressiveComponents.kt` |
 
 ## How to work
 
-1. **Pick the platform.** Web: load `tokens/tokens.css` and `components/bundle.css`, then React 18 and `components/bundle.js` (`window.Expressive`). Android: wrap the app in `ExpressiveTheme` from `android/ExpressiveTheme.kt` (it uses `MaterialExpressiveTheme` with `MotionScheme.expressive()`, the emphasized type styles and optional dynamic colour and true black), then use the Material 3 Compose components with the mapping table below and the helpers in `android/ExpressiveMotion.kt`. A design tool: name styles after the tokens.
+0. **Look at the project first.** If there's an existing app, read its toolkit, Material version, theme and shared components before changing anything. Choose a mode: *adopt the kit* (new app), *map onto their theme* (existing Material 3 app: keep their palette, fonts and shapes and add M3E behaviour with their tokens) or *borrow behaviours only* (a non-Material design system). Don't upgrade dependencies, swap libraries or replace the brand as a side effect. See `docs/existing-projects.md`. For a review, follow `docs/review.md` and change nothing.
+1. **Pick the platform.** Web: load `tokens/tokens.css` and `components/bundle.css`, then React 18 and `components/bundle.js` (`window.Expressive`). Other toolkits: see `docs/platforms.md` and say what's built by hand. Android: wrap the app in `ExpressiveTheme` from `android/ExpressiveTheme.kt` (it uses `MaterialExpressiveTheme` with `MotionScheme.expressive()`, the emphasized type styles and optional dynamic colour and true black), then use the Material 3 Compose components with the mapping table below and the helpers in `android/ExpressiveMotion.kt`. A design tool: name styles after the tokens.
 2. **Pick a screen pattern** from the list below before laying anything out.
 3. **Use tokens, never raw values.** Colours come from roles (`primary`, `on-surface-variant`, `surface-container-high`), radii from the shape scale, spacing from `space-*`, motion from `--motion-*` (web) or `MaterialTheme.motionScheme` (Compose). If a value you need is missing, use the nearest token and say so.
-4. **Apply the M3E behaviours** in this file: shape, motion, emphasis, containment.
-5. **Check before you finish** with the checklist at the end.
+4. **Apply the M3E behaviours** in this file (shape, motion, emphasis, containment) in proportion to the product (see "How much expression" below).
+5. **Design every state**: loading, empty, error, offline and success (`docs/screen-patterns.md`, "States").
+6. **Make it accessible from the start**: targets, gesture alternatives, names and states, font scaling, RTL (`docs/accessibility.md`).
+7. **Check before you finish** with the checklist at the end, and report only the checks you actually ran (`templates/implementation-handoff.md`).
+
+## How much expression
+
+M3E is a way to make the important thing easier to see, not a reason to make everything loud. Before each expressive choice, ask what it helps the user notice or understand. If there's no answer, use the calmer Material 3 treatment.
+
+| Product or screen | Motion scheme | Expressive moments per screen | Typical treatment |
+| --- | --- | --- | --- |
+| Consumer, playful, celebratory (games, learning, social, fitness) | Expressive | Two or three | Library shapes, hero numbers, tonal hero cards, celebrations on outcomes |
+| Everyday consumer (shopping, finance, media) | Expressive | One or two | One hero, shape morph on press, rolling numbers |
+| Productivity, utility, settings | Standard | One | Grouped shapes and tonal containment; little or no bounce |
+| Dense data, admin, long reading, repeated forms | Standard | None or one | Clear type hierarchy, tonal surfaces, calm lists; no ambient motion |
+
+An *expressive moment* is a hero number, a celebration, a library shape used as a focal point, or a tonal hero card. Press morphs, spring transitions and grouped shapes are baseline behaviour and don't count.
+
+Common mistakes: every component oversized, so nothing stands out; accent colour on everything; bounce on routine actions; a different shape per row for no reason; copying a showcase screenshot instead of designing for the real content.
 
 ## The seven M3 Expressive behaviours
 
@@ -110,7 +138,7 @@ Foldables: avoid placing content across the hinge; on unfolded posture, switch t
 
 ### 7. Content voice
 
-Second person, sentence case everywhere, warm and specific to the domain. Buttons are verbs that state what they spend: "Place order · $23.33". Supporting lines explain consequences plainly. Use the domain's real units (4.4 km, 16.7 MWh, 5.8¢/pt). No emoji in UI copy.
+Second person, sentence case everywhere, warm and specific to the domain. Format numbers, currency, dates and units with the user's locale, and keep each sentence one translatable string (no joined fragments). Buttons are verbs that state what they spend: "Place order · $23.33". Supporting lines explain consequences plainly. Use the domain's real units (4.4 km, 16.7 MWh, 5.8¢/pt). No emoji in UI copy.
 
 ## Component patterns
 
@@ -157,12 +185,14 @@ Full recipes are in `docs/screen-patterns.md`. Choose one before laying out:
 2. **Tab list (Explore, Activity, Orders):** `headline-large` title → search bar or filter chips/button group → eyebrow-grouped list rows with shape avatars and trailing values.
 3. **Detail:** back + actions → identity (shape avatar or hero image, title, mono meta) → hero value → chart with a range button group → position card with summary rows → about → bottom action pair (outlined + filled).
 4. **Amount entry:** small bar with close → mode button groups → centred `numeral-large` amount with an ≈ conversion → quick-amount button group → 3×4 keypad → full-width primary.
-5. **Review and confirm:** eyebrow + display sentence with the amount italic in `primary` → summary rows → plain-language footnote → deliberate confirm (swipe handle or large button).
+5. **Review and confirm:** eyebrow + display sentence with the amount italic in `primary` → summary rows → plain-language footnote → deliberate confirm (large button, or a swipe handle that also works with a tap and a screen reader).
 6. **Outcome and celebration:** illustration or spinning shape → mono status badge → `display-large` sentence → stat tiles or summary → outlined secondary above filled "Done".
 7. **Settings:** profile hero in a tonal card → grouped lists titled in `primary` with switches, button groups and value rows.
 8. **Bottom-sheet capture:** scrim over the screen → sheet with mono eyebrow, display title, text fields, a choice row, destination chips, full-width primary.
 9. **Live readout (timer, stopwatch, countdown):** eyebrow → a near full-width `DigitRoll` (stacked for the largest size) → progress ring or wavy bar → Start/Pause between Reset and Lap, with a pulse and haptic on start/stop → laps sliding in as list rows.
 10. **List and detail (adaptive):** compact pushes the detail with predictive back; medium and up puts a `NavigationRail`, a ≤ 420dp list and the detail side by side; expanded opens the rail and may add a third pane.
+
+Every pattern also needs its loading, empty, error, offline and success states; see "States" in `docs/screen-patterns.md`.
 
 ## Do and don't
 
@@ -177,6 +207,8 @@ Full recipes are in `docs/screen-patterns.md`. Choose one before laying out:
 - **Don't** run more than one ambient loop on a screen, or any loop under reduced motion.
 - **Don't** use frosted glass, coloured glows or blur as surfaces; separate with tonal containers.
 - **Don't** hard-code hex values or radii; reference tokens.
+- **Don't** make a gesture the only way to do something (swipe to confirm, swipe to delete, dial drag); add a tap or keyboard path.
+- **Don't** replace an existing app's brand, fonts or libraries, or upgrade its dependencies, without asking.
 
 ## Final checklist
 
@@ -188,3 +220,8 @@ Full recipes are in `docs/screen-patterns.md`. Choose one before laying out:
 - [ ] Haptics mark detents and outcomes (tick, confirm, start/stop), not every tap.
 - [ ] Copy is sentence case, second person, verbs on buttons, real units.
 - [ ] Compact and expanded layouts are both defined (bar ↔ rail, one pane ↔ list and detail); Android goes edge to edge with predictive back.
+- [ ] Loading, empty, error, offline and success states are designed.
+- [ ] Every gesture has a tap or keyboard alternative; icon-only controls have names; state is exposed to screen readers, not only shown by shape or colour.
+- [ ] Works at 200% font scale and in RTL (directional icons mirror; clocks and media don't); numbers and dates are locale-formatted.
+- [ ] Expression matches the product (see "How much expression"); in an existing app, its brand, libraries and versions are unchanged unless agreed.
+- [ ] The handoff lists the checks actually run and any experimental APIs or version requirements.
