@@ -4,7 +4,17 @@
   var h = React.createElement;
   var useState = React.useState;
   function cx() { return Array.prototype.filter.call(arguments, Boolean).join(' '); }
-  function Icon(name, filled, extra) { return name ? h('span', { className: cx('ex-icon', filled && 'is-filled', extra), 'aria-hidden': 'true' }, name) : null; }
+  /* Icons that point along the reading direction. They mirror under dir="rtl" (see .is-directional in bundle.css). */
+  var DIRECTIONAL_ICONS = { arrow_back: 1, arrow_forward: 1, arrow_back_ios: 1, arrow_back_ios_new: 1, arrow_forward_ios: 1, arrow_left: 1, arrow_right: 1, arrow_right_alt: 1,
+    chevron_left: 1, chevron_right: 1, navigate_before: 1, navigate_next: 1, keyboard_arrow_left: 1, keyboard_arrow_right: 1, keyboard_double_arrow_left: 1, keyboard_double_arrow_right: 1,
+    first_page: 1, last_page: 1, send: 1, reply: 1, reply_all: 1, forward: 1, undo: 1, redo: 1, format_list_bulleted: 1, format_indent_increase: 1, format_indent_decrease: 1, login: 1, logout: 1, open_in_new: 1, exit_to_app: 1 };
+  function Icon(name, filled, extra) { return name ? h('span', { className: cx('ex-icon', filled && 'is-filled', DIRECTIONAL_ICONS[name] && 'is-directional', extra), 'aria-hidden': 'true' }, name) : null; }
+  /* True when the element lays out right to left: its computed direction, or the closest [dir] before it is in the DOM. */
+  function isRtl(el) {
+    if (!el) return false;
+    if (el.isConnected && window.getComputedStyle) return window.getComputedStyle(el).direction === 'rtl';
+    var d = el.closest && el.closest('[dir]'); return !!d && d.getAttribute('dir').toLowerCase() === 'rtl';
+  }
 
   /* The M3 Expressive shape library, as polar functions r(t) on a unit circle (t = 0 points up, clockwise).
      Every shape is star-shaped around its centre, so any two can morph by blending their radii. */
@@ -224,7 +234,7 @@
         h('div', { className: 'act', style: { width: 'calc(' + pct + '% - 6px)' } }),
         h('div', { className: 'rest', style: { width: 'calc(' + (100 - pct) + '% - 6px)' } }),
         h('input', { type: 'range', id: p.id, min: min, max: max, step: p.step || 1, value: v, 'aria-label': p.label, onChange: function (e) { var n = +e.target.value; if (p.value == null) st[1](n); if (p.onChange) p.onChange(n); } }),
-        h('div', { className: 'handle', style: { left: pct + '%' } })));
+        h('div', { className: 'handle', style: { insetInlineStart: pct + '%' } })));
   }
 
   function WavyProgress(p) {
@@ -358,7 +368,8 @@
   }
 
   /* Digit roll: each character sits in its own cell and rolls when it changes. Increasing values roll up,
-     decreasing values roll down; simultaneous changes start right to left, a stagger apart. */
+     decreasing values roll down; simultaneous changes start at the last digit, a stagger apart. Lines are
+     always laid out left to right (digits never mirror), so in RTL too the stagger runs from the right. */
   function RollCell(p) {
     var s = useState({ cur: p.ch, prev: null, n: 0, dir: p.dir }), st = s[0];
     if (st.cur !== p.ch) { st = { cur: p.ch, prev: st.cur, n: st.n + 1, dir: p.dir }; s[1](st); }
@@ -482,6 +493,9 @@
     var posS = useState(value), pos = posS[0];
     var drag = React.useRef(null), cancel = React.useRef(function () {}), lastEmit = React.useRef(value);
     var wrapRef = React.useRef(null), widthS = useState(320), width = widthS[0];
+    /* In RTL larger values sit toward the left, so drag, arrow keys and tick placement all flip (sgn = -1). */
+    var rtlS = useState(false), sgn = rtlS[0] ? -1 : 1;
+    React.useLayoutEffect(function () { rtlS[1](isRtl(wrapRef.current)); });
     React.useEffect(function () {
       var el = wrapRef.current; if (!el || !window.ResizeObserver) return undefined;
       var ro = new ResizeObserver(function (en) { widthS[1](en[0].contentRect.width); }); ro.observe(el);
@@ -503,7 +517,7 @@
     function onDown(e) { e.currentTarget.setPointerCapture(e.pointerId); cancel.current(); drag.current = { x: e.clientX, pos: pos, t: e.timeStamp, v: 0 }; }
     function onMove(e) {
       var d = drag.current; if (!d) return;
-      var next = clamp(d.pos - (e.clientX - d.x) / pxPerStep * step);
+      var next = clamp(d.pos - sgn * (e.clientX - d.x) / pxPerStep * step);
       var dt = Math.max(1, e.timeStamp - d.t); d.v = (next - pos) / dt * 1000; d.t = e.timeStamp;
       posS[1](next); emit(next);
     }
@@ -512,7 +526,7 @@
       settle(clamp(pos + d.v * 0.12), d.v);
     }
     function onKey(e) {
-      var dlt = { ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step, PageUp: step * major, PageDown: -step * major }[e.key];
+      var dlt = { ArrowRight: sgn * step, ArrowUp: step, ArrowLeft: -sgn * step, ArrowDown: -step, PageUp: step * major, PageDown: -step * major }[e.key];
       if (e.key === 'Home') dlt = min - value; if (e.key === 'End') dlt = max - value;
       if (dlt == null) return; e.preventDefault();
       var to = clamp(value + dlt); emit(to); cancel.current(); cancel.current = animateSpring(pos, to, 'spatial-fast', posS[1]);
@@ -524,7 +538,7 @@
       var th = (v - pos) / step * stepRad; if (Math.abs(th) >= Math.PI / 2) continue;
       var depth = Math.cos(th), isMajor = Math.round(v / step) % major === 0, near = Math.abs(v - pos) < step / 2;
       var tw = 1 + depth * (isMajor ? 2.2 : 1.4), th2 = isMajor ? H * 0.46 : H * 0.3;
-      ticks.push(h('rect', { key: v, className: cx('tick', near && 'is-centre', isMajor && 'is-major'), x: cx0 + R * Math.sin(th) - tw / 2, y: (H - th2) / 2, width: tw, height: th2, rx: tw / 2, opacity: near ? 1 : 0.18 + 0.7 * depth * depth }));
+      ticks.push(h('rect', { key: v, className: cx('tick', near && 'is-centre', isMajor && 'is-major'), x: cx0 + sgn * R * Math.sin(th) - tw / 2, y: (H - th2) / 2, width: tw, height: th2, rx: tw / 2, opacity: near ? 1 : 0.18 + 0.7 * depth * depth }));
     }
     var fmt = p.format || function (x) { return x; };
     return h('div', { className: 'ex-rotary' },

@@ -19,6 +19,11 @@ Versions refer to this skill and kit, not to Google's Material libraries.
 - Screen pattern 5: a swipe-to-confirm handle must also work with a tap and with a screen reader.
 - `docs/screen-patterns.md` now says ten layouts (it said eight).
 
+### Fixed
+- Web components mirror under `dir="rtl"`: `bundle.css` uses logical properties (`inset-inline-*`, `margin-inline-*`, `padding-inline-*`, logical corner radii, `text-align: start`/`end`) for list rows, chips, the split button and its menu, the slider, switch thumb travel, the snackbar, FAB padding, text fields, the top bar, button groups and the navigation rail.
+- Directional icons (back and forward arrows, chevrons, send, reply, undo, redo and others) get `.is-directional` and flip in RTL.
+- `RotaryDial` flips its drag direction, arrow keys and tick layout in RTL. `DigitRoll` and the time picker's HH:MM fields keep their digit order in RTL.
+
 ## [0.1.0]
 
 - First release: tokens, 29 web components, Compose theme and helpers, brand book, motion recipes, screen patterns, seed palettes and website.

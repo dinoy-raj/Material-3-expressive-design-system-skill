@@ -54,7 +54,7 @@ WCAG 2.2 SC 2.5.7 says anything done by dragging must also work with a single ta
 
 M3E layouts mirror in Arabic, Hebrew, Persian and Urdu. Compose mirrors automatically through `LocalLayoutDirection`. On the web, set `dir="rtl"` on `<html>` and use logical properties.
 
-- **Use start and end, never left and right.** In Compose use `padding(start = …)` and `Arrangement.Start`. In CSS use `margin-inline-start`, `padding-inline`, `inset-inline-end` and `text-align: start`. The kit's `bundle.css` still has some physical `left` and `right` values, so check mirrored screens visually.
+- **Use start and end, never left and right.** In Compose use `padding(start = …)` and `Arrangement.Start`. In CSS use `margin-inline-start`, `padding-inline`, `inset-inline-end` and `text-align: start`.
 - **Mirror directional icons:** back and forward arrows, chevrons, send, reply, undo and redo, list bullets, and the split-button chevron's position. In Compose use `Icons.AutoMirrored.*`. On the web, flip with `transform: scaleX(-1)` under `[dir="rtl"]`.
 - **Don't mirror** clocks and the time picker dial (they run clockwise everywhere), media playback controls, checkmarks, logos, charts' time axes in most locales (follow the product's locale research), or the digits inside numbers.
 - **Motion follows reading direction.** Pushed screens slide in from the end edge. Swipe to delete swipes toward the start edge. The `DigitRoll` up and down direction doesn't change, but its right-to-left stagger becomes left-to-right in RTL so it still starts at the last digit.
