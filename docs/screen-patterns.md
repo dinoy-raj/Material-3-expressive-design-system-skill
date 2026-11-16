@@ -1,6 +1,6 @@
 # Screen patterns
 
-Eight layouts cover nearly all of the 100 reference screens. Build new screens from these before inventing a new one.
+Ten layouts cover nearly all of the 100 reference screens. Build new screens from these before inventing a new one. Each pattern describes the main state; the [States](#states) section covers loading, empty, error and offline for all of them.
 
 ## 1. Hub (home tab)
 
@@ -45,7 +45,7 @@ Seen in: Sherwood Portfolio, Trill Learn, Magpie Studio, Shelfie Library, Dollop
 1. Small `TopBar` with back. An `eyebrow` (REVIEW · MARKET ORDER) and a display-face sentence with the amount italicised in `primary` ("Buy *$100.00* of ACRN").
 2. `SummaryList` of the terms; total row last.
 3. A plain-language footnote about what happens next.
-4. A deliberate confirm gesture for money: a swipe-up handle or a `size="lg"` button ("Book for 49,000 pts").
+4. A deliberate confirm gesture for money: a swipe-up handle or a `size="lg"` button ("Book for 49,000 pts"). A swipe handle must also work with a tap or Enter (it then asks for a second tap or a short hold with visible progress) and expose a single "Confirm" action to screen readers. See `docs/accessibility.md`.
 
 ## 6. Outcome and celebration
 
@@ -82,6 +82,32 @@ Seen in: Sherwood Portfolio, Trill Learn, Magpie Studio, Shelfie Library, Dollop
 2. Medium and up: `NavigationRail` on the leading edge, the list pane at up to 420px, the detail pane filling the rest with `space-6` gutters. Selecting a row cross-fades the detail on `effects-default`; the selected row turns `secondary-container`.
 3. Expanded (1200px+): the rail starts expanded, and a third pane (filters or related items) may appear on the trailing edge.
 4. Keep the selection when the window resizes; going from two panes to one shows the detail if something was selected.
+
+## States
+
+Every pattern needs more than its main state. Design these before calling a screen done, using the same tokens and components.
+
+| State | When | How it looks |
+| --- | --- | --- |
+| **Loading (first time)** | No content yet, under about 5 seconds | Keep the top bar and navigation; put a `LoadingIndicator` where the hero goes. For lists, show 3–5 placeholder rows on `surface-container-high`, shaped like real rows, with no shimmer under reduced motion |
+| **Loading (refresh or more)** | Content already showing | Leave the content in place; a contained `LoadingIndicator` at the top for pull to refresh, or at the end of the list for more items. Never blank out the screen |
+| **Long operation** | Known progress (uploads, imports) | `WavyProgress` with a percentage and a Cancel action |
+| **Empty (first use)** | Nothing has been created yet | A library shape in a tonal container (`primary-container`), a `headline-small` sentence saying what goes here, one line of help, and the main action as a filled button. This is a moment for warmth, not an error |
+| **Empty (no results)** | Search or filters match nothing | Keep the search bar and chips visible; say what was searched ("No results for 'tulip'"); offer to clear the filters. Use a plain icon, not a celebration shape |
+| **Error (inline)** | One field or section failed | Message in `error` with an icon beside the field or inside the section card; say how to fix it; keep what the user typed |
+| **Error (screen)** | The screen can't load | A `Card` in `error-container` with an icon, a plain sentence about what happened, and a Retry button. Keep navigation working |
+| **Offline** | No connection | A slim banner (`surface-container-highest`, icon + "You're offline. Showing saved data.") under the top bar; disable actions that need the network and say why; queue the actions you can |
+| **Permission needed or denied** | Location, camera, notifications | Explain the benefit before asking. If denied, show what still works and a button to open settings |
+| **Success** | An action finished | Routine: a `Snackbar` in the past tense with Undo. Important or rare: the Outcome pattern (6) |
+| **Destructive confirm** | Deleting, cancelling, leaving unsaved work | Prefer Undo over a confirmation. When the action can't be undone, use a dialog whose button names the action ("Delete 3 photos") in `error` |
+| **Disabled** | An action isn't available yet | 38% opacity and an explanation nearby (for example, helper text under the field that's blocking it). Don't hide the main action |
+
+Rules:
+
+- Loading under about 300ms shows nothing. Don't flash an indicator.
+- Keep the layout stable between states so nothing jumps when content arrives.
+- Announce state changes to screen readers (`role="status"`, `LiveRegionMode.Polite`).
+- Error and empty text follow the content voice: plain, specific, no blame, no jokes about failure.
 
 ## Unfolded and tablet
 

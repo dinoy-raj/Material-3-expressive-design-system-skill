@@ -39,7 +39,13 @@ DOCS = [  # slug, nav label, page title, card blurb, card shape, card tone
     ("motion", "Motion", "Motion recipes", "Springs, not durations. Recipes for press, morph and reveal on the web and in Compose.", "sunny", "highlight"),
     ("screen-patterns", "Patterns", "Screen patterns", "Whole screens assembled from the parts: dashboards, settings, detail and empty states.", "clover4", "secondary"),
     ("seed-palettes", "Palettes", "Seed palettes", "Swap one seed colour and rebuild every role in light and dark.", "softBurst", "primary"),
+    ("accessibility", "Accessibility", "Accessibility", "Touch targets, gesture alternatives, screen readers, font scaling, right-to-left and localization.", "burst", "secondary"),
+    ("existing-projects", "Existing apps", "Existing projects", "Bring M3 Expressive into an app that already has a theme, without replacing its brand or libraries.", "cookie4", "tertiary"),
+    ("platforms", "Platforms", "Platforms", "Compose, web, Views, Wear OS, Flutter, React Native and SwiftUI, with spring conversions and sources.", "cookie9", "highlight"),
+    ("review", "Review", "Reviewing a design", "An audit checklist with severities, a finding format and a verdict.", "flower8", "primary"),
 ]
+NAV_DOCS = 5  # only the first guides appear in the header menu; the rest are in the guides grid and footer
+SKILL_FOLDERS = ("tokens", "docs", "components", "android", "templates")  # keep in sync with scripts/validate_skill.py
 
 
 def u(path=""):
@@ -94,7 +100,7 @@ def shape_icon():
 def page(title, body, path="", description=None, scripts=""):
     description = description or "Expressive Kit: a Material 3 Expressive design system and AI skill with tokens, components, a Compose theme and guidelines."
     nav = [("Overview", u() + "#top"), ("Foundations", u() + "#foundations"), ("Components", u() + "#components")] + \
-          [(label, u(f"docs/{slug}")) for slug, label, *_ in DOCS]
+          [(label, u(f"docs/{slug}")) for slug, label, *_ in DOCS[:NAV_DOCS]]
     links = "".join(
         f'<a class="lnk rv" style="--i:{i}" href="{href}"><span><span class="num">{i + 1:02d}</span>{name}</span>'
         f'<span class="go">{shape_svg("flower8")}<span class="ex-icon" aria-hidden="true">arrow_outward</span></span></a>'
@@ -380,7 +386,8 @@ def build():
     with zipfile.ZipFile(OUT / SKILL_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
         base = "material-3-expressive"
         z.write(ROOT / "SKILL.md", f"{base}/SKILL.md")
-        for folder in ("tokens", "docs", "components", "android"):
+        z.write(ROOT / "LICENSE", f"{base}/LICENSE")
+        for folder in SKILL_FOLDERS:
             for f in sorted((ROOT / folder).rglob("*")):
                 if f.is_file():
                     z.write(f, f"{base}/{f.relative_to(ROOT)}")
