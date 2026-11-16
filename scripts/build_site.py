@@ -4,8 +4,8 @@
 Run after scripts/build.py:  python3 scripts/build_site.py
 Needs the `markdown` package (pip install markdown).
 
-The site is published by GitHub Pages at dinoy-raj.github.io/Material-3-expressive-design-system-skill/ and served on
-dinoyraj.com/Material-3-expressive-design-system-skill through a Vercel rewrite in the portfolio-website repository.
+The site is published by GitHub Pages at dinoy-raj.github.io/material-3-expressive-skill/ and served on
+dinoyraj.com/material-3-expressive-skill through a Vercel rewrite in the portfolio-website repository.
 Both hosts use the same path prefix, so every link is root-absolute under BASE and works on either host, with or
 without a trailing slash. Page links have no `.html`: GitHub Pages and Vercel both resolve them.
 The look follows dinoyraj.com: a floating dark island nav, poster headlines in Google Sans Flex, grouped rows with
@@ -25,9 +25,9 @@ import markdown
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "_site"
 TOKENS = json.loads((ROOT / "tokens" / "tokens.json").read_text())
-REPO_URL = "https://github.com/dinoy-raj/Material-3-expressive-design-system-skill"
+REPO_URL = "https://github.com/dinoy-raj/material-3-expressive-skill"
 HOME_URL = "https://dinoyraj.com"
-BASE = os.environ.get("SITE_BASE", "/Material-3-expressive-design-system-skill/")
+BASE = os.environ.get("SITE_BASE", "/material-3-expressive-skill/")
 CANONICAL = HOME_URL + BASE.rstrip("/")
 SKILL_ZIP = "material-3-expressive-skill.zip"
 
