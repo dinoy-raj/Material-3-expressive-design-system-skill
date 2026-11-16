@@ -12,7 +12,7 @@
 - **A Jetpack Compose theme** generated from the same tokens (`MaterialExpressiveTheme`, expressive motion scheme, emphasized type, dynamic colour, true black), plus motion helpers and extra components.
 - **An AI skill** ([`SKILL.md`](SKILL.md)) that teaches Claude or any AI tool M3 Expressive shape, motion, emphasis, component patterns and screen patterns.
 - **Guidelines:** a [brand book](docs/brand-book.md), [motion recipes](docs/motion.md), [ten screen patterns](docs/screen-patterns.md) and [ten seed palettes](docs/seed-palettes.md).
-- **A website** with live components at [dinoyraj.com/Material-3-expressive-design-system-skill](https://dinoyraj.com/Material-3-expressive-design-system-skill), redeployed on every merge to `main`.
+- **A website** with live components at [dinoyraj.com/material-3-expressive-skill](https://dinoyraj.com/material-3-expressive-skill), redeployed on every merge to `main`.
 
 ## Contents
 
@@ -46,7 +46,7 @@ The repository already follows Claude's design system format, so it can be impor
 | Component cards | `components/<Name>/preview.html` and `components/<Name>/README.md` |
 | Cover | `components/Cover/preview.html` |
 
-In Claude, connect GitHub and ask: *"Create a design system from github.com/dinoy-raj/Material-3-expressive-design-system-skill"*.
+In Claude, connect GitHub and ask: *"Create a design system from github.com/dinoy-raj/material-3-expressive-skill"*.
 
 ### On the web
 
@@ -68,7 +68,7 @@ In Claude, connect GitHub and ask: *"Create a design system from github.com/dino
 
 The theme follows the system. Force one with `<html data-theme="light">` or `data-theme="dark"`. To use only the look, load `tokens/tokens.css` and use variables such as `var(--primary)`, `var(--shape-xl)` and `var(--space-4)` and type classes such as `class="headline-large"`.
 
-From another project: `npm install git+ssh://git@github.com/dinoy-raj/Material-3-expressive-design-system-skill.git`, then import `expressive-kit/tokens.css`, `expressive-kit/styles.css` and `expressive-kit`.
+From another project: `npm install git+ssh://git@github.com/dinoy-raj/material-3-expressive-skill.git`, then import `expressive-kit/tokens.css`, `expressive-kit/styles.css` and `expressive-kit`.
 
 ### On Android (Jetpack Compose)
 
@@ -198,13 +198,13 @@ Build and preview the website locally:
 pip install markdown && SITE_BASE=/ python3 scripts/build_site.py && npx serve _site
 ```
 
-Then open http://localhost:3000. `SITE_BASE=/` builds the site for the root; the deployed build uses `/Material-3-expressive-design-system-skill/`. Page links have no `.html`, so use a server that resolves them, like `serve`. Check each `on-*` colour pair still meets 4.5:1 in both themes before committing, and commit source and generated files together. The deploy workflow fails if generated files are out of date.
+Then open http://localhost:3000. `SITE_BASE=/` builds the site for the root; the deployed build uses `/material-3-expressive-skill/`. Page links have no `.html`, so use a server that resolves them, like `serve`. Check each `on-*` colour pair still meets 4.5:1 in both themes before committing, and commit source and generated files together. The deploy workflow fails if generated files are out of date.
 
 ### Website deployment
 
 `.github/workflows/pages.yml` builds the website and the downloadable skill on every push to `main`, then deploys to GitHub Pages. One-time setup: in the repository's Settings → Pages, set **Source** to **GitHub Actions**.
 
-The same build is served at [dinoyraj.com/Material-3-expressive-design-system-skill](https://dinoyraj.com/Material-3-expressive-design-system-skill): `vercel.json` in the [portfolio-website](https://github.com/dinoy-raj/portfolio-website) repository rewrites that path to the GitHub Pages site, so each Pages deploy shows up there with no extra step. Both hosts share the path prefix, which is why every link the site builder writes is root-absolute under it. Pages are styled after dinoyraj.com (`scripts/site.css`).
+The same build is served at [dinoyraj.com/material-3-expressive-skill](https://dinoyraj.com/material-3-expressive-skill): `vercel.json` in the [portfolio-website](https://github.com/dinoy-raj/portfolio-website) repository rewrites that path to the GitHub Pages site, so each Pages deploy shows up there with no extra step. Both hosts share the path prefix, which is why every link the site builder writes is root-absolute under it. Pages are styled after dinoyraj.com (`scripts/site.css`).
 
 ## Credits
 
